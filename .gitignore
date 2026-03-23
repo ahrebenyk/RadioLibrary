@@ -1,0 +1,31 @@
+# --- CLion / JetBrains ---
+.idea/
+cmake-build-*/
+*.i
+*.s
+
+# --- CMake ---
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+Makefile
+cmake_install.cmake
+install_local_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+
+*.exe
+*.out
+*.app
+*.bin
+*.hex
+*.obj
+*.o
+*.a
+*.lib
+*.so
+*.dylib
+
+*.log
+.DS_Store
+Thumbs.db
