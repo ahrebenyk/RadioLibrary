@@ -10,6 +10,7 @@ add_executable(RadioLibrary src/main.cpp
         src/Resistor.cpp
         src/Diode.cpp
         src/Transistor.cpp
+        src/Capacitor.cpp
         src/DataService.cpp)
 
 add_custom_target(copy_data_files ALL

@@ -22,5 +22,12 @@
     "voltage": 45.0,
     "current": 0.1,
     "gain": 200
+  },
+  {
+    "type": "Capacitor",
+    "id": 12,
+    "name": "Electrolytic 100uF",
+    "capacity": 100.0,
+    "voltage": 25.0
   }
 ]

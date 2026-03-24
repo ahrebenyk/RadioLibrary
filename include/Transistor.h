@@ -5,7 +5,7 @@
 
 using namespace std;
 
-enum class TransistorType { NPN, PNP, N_CHANNEL, P_CHANNEL };
+enum class TransistorType { NPN, PNP };
 
 class Transistor : public Component {
 private:

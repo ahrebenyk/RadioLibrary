@@ -2,7 +2,7 @@
 #define RADIOLIBRARY_COMPONENT_H
 
 #include <string>
-enum class ComponentType { Resistor, Diode, Transistor, Unknown };
+enum class ComponentType { Resistor, Diode, Transistor, Capacitor, Unknown };
 
 class Component {
 protected:

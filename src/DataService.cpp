@@ -33,6 +33,8 @@ void DataService::load() {
             database.push_back(parseDiode(item));
         } else if (type == "Transistor") {
             database.push_back(parseTransistor(item));
+        } else if (type == "Capacitor") {
+            database.push_back(parseCapacitor(item));
         }
     }
 }
@@ -42,6 +44,15 @@ unique_ptr<Resistor> DataService::parseResistor(const json& j) {
         j.at("name").get<string>(),
         j.at("resistance").get<double>(),
         j.at("power").get<double>()
+    );
+}
+
+unique_ptr<Capacitor> DataService::parseCapacitor(const json& j) {
+    return make_unique<Capacitor>(
+        j.at("id").get<int>(),
+        j.at("name").get<string>(),
+        j.at("voltage").get<double>(),
+        j.at("capacity").get<double>()
     );
 }
 
@@ -71,5 +82,6 @@ unique_ptr<Transistor> DataService::parseTransistor(const json& j) {
 void DataService::print() {
     for (const auto& item : database) {
         item->showInfo();
+        cout << endl;
     }
 }
