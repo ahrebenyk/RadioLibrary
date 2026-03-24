@@ -3,8 +3,8 @@
 
 using namespace std;
 
-Diode::Diode(int id, std::string name, double current, double voltage, std::string mat)
-    : Component(id, name), current(current), voltage(voltage), material(mat) {}
+Diode::Diode(int id, std::string name, double current, double voltage, string mat)
+    : Component(id, name, ComponentType::Diode), current(current), voltage(voltage), material(mat) {}
 
 void Diode::showInfo() {
     cout << "ID: " << id << "\n";

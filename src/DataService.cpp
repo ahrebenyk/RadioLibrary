@@ -85,3 +85,12 @@ void DataService::print() {
         cout << endl;
     }
 }
+
+void DataService::printByType(ComponentType type) {
+    for (const auto& item : database) {
+        if (item->getType() == type) {
+            item->showInfo();
+            cout << endl;
+        }
+    }
+}

@@ -2,6 +2,7 @@
 #include <windows.h>
 
 #include "DataService.h"
+#include "UserInterface.h"
 
 int main()
 {
@@ -9,7 +10,8 @@ int main()
 
     DataService ds("data/components.json");
     ds.load();
-    ds.print();
+    UserInterface ui(ds);
+    ui.showMainMenu();
 
     return 0;
 }

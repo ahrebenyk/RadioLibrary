@@ -29,6 +29,7 @@ public:
     void save();
     void add(Component* c);
     void print();
+    void printByType(ComponentType type);
     void clear();
 };
 #endif

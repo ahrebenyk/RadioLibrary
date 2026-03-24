@@ -9,14 +9,14 @@ enum class TransistorType { NPN, PNP };
 
 class Transistor : public Component {
 private:
-    TransistorType type;
+    TransistorType transistorType;
     double voltage;
     double current;
     int gain;
 
 public:
-    Transistor(int id, string name, TransistorType type, double voltage, double current, int gain);
-    string getTypeString() const;
+    Transistor(int id, string name, TransistorType transistorType, double voltage, double current, int gain);
+    string getTransistorTypeString() const;
     void showInfo() override;
 };
 #endif

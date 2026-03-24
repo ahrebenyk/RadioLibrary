@@ -5,7 +5,7 @@
 using namespace std;
 
 Capacitor::Capacitor(int id, string name, double volt, double cap)
-    : Component(id, name), voltage(volt), capacity(cap) {}
+    : Component(id, name, ComponentType::Capacitor), voltage(volt), capacity(cap) {}
 
 void Capacitor::showInfo() {
     cout << "ID: " << id << "\n";
