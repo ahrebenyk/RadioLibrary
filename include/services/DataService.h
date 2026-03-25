@@ -2,9 +2,9 @@
 #define RADIOLIBRARY_DATASERVICE_H
 #include <vector>
 #include <string>
-#include "Component.h"
+#include "components/Component.h"
 #include <memory>
-#include <json.hpp>
+#include "external/json.hpp"
 
 using namespace std;
 

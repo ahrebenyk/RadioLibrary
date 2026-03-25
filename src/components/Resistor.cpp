@@ -1,4 +1,4 @@
-#include "Resistor.h"
+#include "components/Resistor.h"
 #include <iostream>
 
 using namespace std;

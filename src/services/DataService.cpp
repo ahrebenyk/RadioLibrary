@@ -1,8 +1,7 @@
-#include "DataService.h"
+#include "services/DataService.h"
 #include <fstream>
 #include <iostream>
-
-#include "JsonFileService.h"
+#include "services/JsonFileService.h"
 
 using namespace std;
 

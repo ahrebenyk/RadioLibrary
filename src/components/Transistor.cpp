@@ -1,4 +1,4 @@
-#include "Transistor.h"
+#include "components/Transistor.h"
 #include <iostream>
 
 using namespace std;

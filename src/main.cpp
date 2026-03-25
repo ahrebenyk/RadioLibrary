@@ -1,8 +1,8 @@
 #include <iostream>
 #include <windows.h>
 
-#include "DataService.h"
-#include "UserInterface.h"
+#include "services/DataService.h"
+#include "services/UserInterface.h"
 
 int main()
 {

@@ -1,4 +1,4 @@
-#include "Diode.h"
+#include "components/Diode.h"
 #include <iostream>
 
 using namespace std;

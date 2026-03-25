@@ -6,14 +6,14 @@ set(CMAKE_CXX_STANDARD 20)
 include_directories(include)
 
 add_executable(RadioLibrary src/main.cpp
-        src/Component.cpp
-        src/Resistor.cpp
-        src/Diode.cpp
-        src/Transistor.cpp
-        src/Capacitor.cpp
-        src/DataService.cpp
-        src/UserInterface.cpp
-        src/JsonFileService.cpp)
+        src/components/Component.cpp
+        src/components/Resistor.cpp
+        src/components/Diode.cpp
+        src/components/Transistor.cpp
+        src/components/Capacitor.cpp
+        src/services/DataService.cpp
+        src/services/UserInterface.cpp
+        src/services/JsonFileService.cpp)
 
 add_custom_target(copy_data_files ALL
         COMMAND ${CMAKE_COMMAND} -E copy_directory

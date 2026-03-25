@@ -1,4 +1,4 @@
-#include "Component.h"
+#include "components/Component.h"
 #include <iostream>
 using namespace std;
 

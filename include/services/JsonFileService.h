@@ -2,14 +2,13 @@
 #define RADIOLIBRARY_JSONSERVICE_H
 #include <vector>
 #include <string>
-#include "Component.h"
 #include <memory>
-#include <json.hpp>
-#include "Component.h"
-#include "Resistor.h"
-#include "Diode.h"
-#include "Transistor.h"
-#include "Capacitor.h"
+#include "external/json.hpp"
+#include "components/Component.h"
+#include "components/Resistor.h"
+#include "components/Diode.h"
+#include "components/Transistor.h"
+#include "components/Capacitor.h"
 
 using namespace std;
 
