@@ -7,6 +7,9 @@ class UserInterface {
 private:
     DataService& ds;
     void showSubMenu();
+    void getByIdMenu();
+    static void clearScreen();
+    static void awaitKey();
     void clearInput();
 
 public:

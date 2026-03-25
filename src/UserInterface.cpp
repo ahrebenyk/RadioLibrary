@@ -13,9 +13,11 @@ void UserInterface::clearInput() {
 
 void UserInterface::showMainMenu() {
     while (true) {
-        cout << "\n===== ГОЛОВНЕ МЕНЮ =====\n";
+        clearScreen();
+        cout << "\n======= ГОЛОВНЕ МЕНЮ =======\n";
         cout << "1. Показати всі компоненти\n";
         cout << "2. Пошук за типом\n";
+        cout << "3. Пошук за ID\n";
         cout << "0. Вихід\n";
         cout << endl;
 
@@ -23,10 +25,15 @@ void UserInterface::showMainMenu() {
 
         switch (choice) {
             case '1':
+                clearScreen();
                 ds.print();
+                awaitKey();
                 break;
             case '2':
                 showSubMenu();
+                break;
+            case '3':
+                getByIdMenu();
                 break;
             case '0':
                 cout << "Завершення роботи...\n";
@@ -34,12 +41,14 @@ void UserInterface::showMainMenu() {
             default:
                 cout << "Невірний пункт меню.\n";
         }
+
     }
 }
 
 void UserInterface::showSubMenu() {
     while (true) {
-        cout << "\n--- ВИБЕРІТЬ ТИП КОМПОНЕНТУ ---\n";
+        clearScreen();
+        cout << "\n--- ВИБЕРІТЬ ТИП КОМПОНЕНТІВ ---\n";
         cout << "1. Резистори\n";
         cout << "2. Діоди\n";
         cout << "3. Транзистори\n";
@@ -52,15 +61,19 @@ void UserInterface::showSubMenu() {
         switch (choice) {
             case '1':
                 ds.printByType(ComponentType::Resistor);
+                awaitKey();
                 break;
             case '2':
                 ds.printByType(ComponentType::Diode);
+                awaitKey();
                 break;
             case '3':
                 ds.printByType(ComponentType::Transistor);
+                awaitKey();
                 break;
             case '4':
                 ds.printByType(ComponentType::Capacitor);
+                awaitKey();
                 break;
             case '0':
                 return;
@@ -68,3 +81,33 @@ void UserInterface::showSubMenu() {
         }
     }
 }
+
+void UserInterface::getByIdMenu() {
+    clearScreen();
+    int searchId;
+    cout << "Введіть ID компонента: ";
+    if (!(cin >> searchId)) {
+        clearInput();
+        return;
+    }
+
+    Component* found = ds.getById(searchId);
+
+    if (found) {
+        cout << "\nЗнайдено компонент:\n";
+        found->showInfo();
+    } else {
+        cout << "\nПомилка: Компонент з ID " << searchId << " не існує.\n";
+    }
+    awaitKey();
+}
+
+void UserInterface::clearScreen() {
+    system("cls");
+}
+
+void UserInterface::awaitKey() {
+    cout << "\nНатисніть будь-яку клавішу, щоб повернутися...";
+    _getch();
+}
+
