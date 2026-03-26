@@ -23,6 +23,7 @@ public:
     void add(Component* c);
     void print();
     void printByType(ComponentType type);
+    vector<Component*> searchByName(const string& namePart);
     void clear();
 };
 #endif

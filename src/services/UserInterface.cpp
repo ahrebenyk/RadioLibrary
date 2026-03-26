@@ -14,12 +14,14 @@ void UserInterface::clearInput() {
 void UserInterface::showMainMenu() {
     while (true) {
         clearScreen();
-        cout << "\n======= ГОЛОВНЕ МЕНЮ =======\n";
+        cout << MENU_COLOR << "\n------- ГОЛОВНЕ МЕНЮ -------\n";
         cout << "1. Показати всі компоненти\n";
         cout << "2. Пошук за типом\n";
         cout << "3. Пошук за ID\n";
+        cout << "4. Пошук за назвою\n";
         cout << "0. Вихід\n";
-        cout << endl;
+        cout << "----------------------------\n";
+        cout << endl << RESET;
 
         char choice = _getch();
 
@@ -30,10 +32,13 @@ void UserInterface::showMainMenu() {
                 awaitKey();
                 break;
             case '2':
-                showSubMenu();
+                showSearchByTypeMenu();
                 break;
             case '3':
                 getByIdMenu();
+                break;
+            case '4':
+                searchByNameMenu();
                 break;
             case '0':
                 cout << "Завершення роботи...\n";
@@ -45,16 +50,17 @@ void UserInterface::showMainMenu() {
     }
 }
 
-void UserInterface::showSubMenu() {
+void UserInterface::showSearchByTypeMenu() {
     while (true) {
         clearScreen();
-        cout << "\n--- ВИБЕРІТЬ ТИП КОМПОНЕНТІВ ---\n";
+        cout << MENU_COLOR << "\n--- ВИБЕРІТЬ ТИП КОМПОНЕНТІВ ---\n";
         cout << "1. Резистори\n";
         cout << "2. Діоди\n";
         cout << "3. Транзистори\n";
         cout << "4. Конденсатори\n";
         cout << "0. Назад у головне меню\n";
-        cout << endl;
+        cout << "--------------------------------\n";
+        cout << endl << RESET;
 
         char choice = _getch();
 
@@ -85,7 +91,8 @@ void UserInterface::showSubMenu() {
 void UserInterface::getByIdMenu() {
     clearScreen();
     int searchId;
-    cout << "Введіть ID компонента: ";
+    cout << MENU_COLOR << "Введіть ID компонента: " << RESET;
+
     if (!(cin >> searchId)) {
         clearInput();
         return;
@@ -97,7 +104,26 @@ void UserInterface::getByIdMenu() {
         cout << "\nЗнайдено компонент:\n";
         found->showInfo();
     } else {
-        cout << "\nПомилка: Компонент з ID " << searchId << " не існує.\n";
+        cout << "\nКомпонент з ID " << searchId << " не знайдено.\n";
+    }
+    awaitKey();
+}
+
+void UserInterface::searchByNameMenu() {
+    clearScreen();
+    string namePart;
+    cout << MENU_COLOR << "Введіть частину назви компонента: " << RESET;
+
+    getline(cin >> std::ws, namePart);
+    vector<Component*> results = ds.searchByName(namePart);
+
+    if (!results.empty()) {
+        cout << "\nЗнайдено компонентів: \n" << results.size();
+        for (auto* comp : results) {
+            comp->showInfo();
+        }
+    } else {
+        cout << "\nКомпонент за ім'ям " << namePart << " не знайдено.\n";
     }
     awaitKey();
 }
@@ -107,7 +133,9 @@ void UserInterface::clearScreen() {
 }
 
 void UserInterface::awaitKey() {
+    cout << MENU_COLOR;
     cout << "\nНатисніть будь-яку клавішу, щоб повернутися...";
+    cout << RESET;
     _getch();
 }
 

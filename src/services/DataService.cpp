@@ -15,7 +15,7 @@ void DataService::clear() {
 void DataService::load() {
     database = JsonFileService::loadFromFile(this->filename);
     if (database.empty()) {
-        std::cout << "База даних порожня або файл не знайдено." << endl;
+        cout << "База даних порожня або файл не знайдено." << endl;
     }
 }
 
@@ -42,4 +42,21 @@ Component* DataService::getById(int targetId) {
         }
     }
     return nullptr;
+}
+
+vector<Component*> DataService::searchByName(const string& namePart) {
+    vector<Component*> results;
+
+    string query = namePart;
+    ranges::transform(query, query.begin(), ::tolower);
+
+    for (const auto& item : database) {
+        string itemName = item->getName();
+        ranges::transform(itemName, itemName.begin(), ::tolower);
+
+        if (itemName.find(query) != string::npos) {
+            results.push_back(item.get());
+        }
+    }
+    return results;
 }

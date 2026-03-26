@@ -13,6 +13,7 @@ protected:
 public:
     Component(int id, string name, ComponentType type);
     ComponentType getType() const { return type; };
+    string getName() const { return name; };
     int getId() const { return id; };
     virtual ~Component() = default;
     virtual void showInfo() = 0;
