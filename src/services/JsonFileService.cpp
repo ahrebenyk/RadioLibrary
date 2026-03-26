@@ -81,3 +81,43 @@ unique_ptr<Transistor> JsonFileService::parseTransistor(const json& j) {
         j.at("gain").get<int>()
     );
 }
+
+void JsonFileService::saveToFile(const std::string& filename, const std::vector<std::unique_ptr<Component>>& database) {
+    nlohmann::json jArray = nlohmann::json::array();
+
+    for (const auto& item : database) {
+        nlohmann::json jItem;
+        jItem["id"] = item->getId();
+        jItem["name"] = item->getName();
+        jItem["type"] = componentTypeToString(item->getType());
+
+        if (item->getType() == ComponentType::Resistor) {
+            auto* r = static_cast<Resistor*>(item.get());
+            jItem["resistance"] = r->getResistance();
+            jItem["power"] = r->getPower();
+        } else if (item->getType() == ComponentType::Transistor) {
+            auto* t = static_cast<Transistor*>(item.get());
+            jItem["gain"] = t->getGain();
+            jItem["polarity"] = t->getPolarity();
+            jItem["current"] = t->getCurrent();
+            jItem["volatage"] = t->getVoltage();
+        } else if (item->getType() == ComponentType::Diode) {
+            auto* t = static_cast<Diode*>(item.get());
+            jItem["current"] = t->getCurrent();
+            jItem["voltage"] = t->getVoltage();
+            jItem["material"] = t->getMaterial();
+        } else if (item->getType() == ComponentType::Capacitor) {
+            auto* t = static_cast<Capacitor*>(item.get());
+            jItem["capacity"] = t->getCapacity();
+            jItem["voltage"] = t->getVoltage();
+        }
+
+        jArray.push_back(jItem);
+    }
+
+    std::ofstream file(filename);
+    if (file.is_open()) {
+        file << jArray.dump(4);
+        file.close();
+    }
+}

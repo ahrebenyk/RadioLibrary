@@ -65,3 +65,19 @@ vector<Component*> DataService::searchByName(const string& namePart) {
     }
     return results;
 }
+
+bool DataService::deleteById(int id) {
+    auto it = ranges::find_if(
+        database,
+        [id](const unique_ptr<Component>& item) {
+            return item->getId() == id;
+    });
+
+    if (it != database.end()) {
+        database.erase(it);
+        JsonFileService::saveToFile(this->filename, database);
+        return true;
+    }
+
+    return false;
+}

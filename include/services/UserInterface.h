@@ -10,6 +10,7 @@ private:
     DataService& ds;
     void showSearchByTypeMenu();
     void getByIdMenu();
+    void deleteByIdMenu();
     void searchByNameMenu();
     void printAllComponents();
     void printComponentsByType(ComponentType type);

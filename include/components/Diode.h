@@ -9,9 +9,11 @@ private:
     double current;
     double voltage;
     string material;
-
 public:
     Diode(int id, string name, double current, double voltage, string mat);
+    double getCurrent() const { return current; }
+    double getVoltage() const { return voltage; }
+    string getMaterial() const { return material; }
     void showInfo() override;
 };
 

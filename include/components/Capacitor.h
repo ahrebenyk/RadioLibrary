@@ -11,6 +11,8 @@ private:
     double capacity;
 public:
     Capacitor(int id, string name, double volt, double cap);
+    double getVoltage() const { return voltage; }
+    double getCapacity() const { return capacity; }
     void showInfo() override;
 };
 

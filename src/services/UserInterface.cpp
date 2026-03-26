@@ -15,6 +15,7 @@ void UserInterface::showMainMenu() {
         printMenuItem("2. Пошук за типом");
         printMenuItem("3. Пошук за ID");
         printMenuItem("4. Пошук за назвою");
+        printMenuItem("5. Видалити");
         printMenuItem("0. Вихід");
         printMenuLine();
 
@@ -34,6 +35,9 @@ void UserInterface::showMainMenu() {
                 break;
             case '4':
                 searchByNameMenu();
+                break;
+            case '5':
+                deleteByIdMenu();
                 break;
             case '0':
                 return;
@@ -112,6 +116,44 @@ void UserInterface::getByIdMenu() {
             printMenuLine();
         } else {
             printMenuItem(format("\nКомпонент з ID {} не знайдено", searchId));
+        }
+        awaitKey();
+    }
+}
+
+void UserInterface::deleteByIdMenu() {
+    bool idEntered = false;
+    while (!idEntered) {
+        clearScreen();
+        int id;
+        printMenuItem("Введіть ID для видалення:");
+
+        if (!(cin >> id)) {
+            printMenuItem("Помилка: введіть ціле число");
+            clearInput();
+            awaitKey();
+            continue;
+        }
+
+        idEntered = true;
+        Component* result = ds.getById(id);
+
+        if (result) {
+            printMenuItem("\nВи впевнені що хочете видалити?");
+            printMenuLine();
+            result->showInfo();
+            printMenuLine();
+            printMenuItem("(y/n)?");
+            char confirm = _getch();
+            if (confirm == 'y' || confirm == 'Y' || confirm == 'n' || confirm == 'N') {
+                if (ds.deleteById(id)) {
+                    printMenuItem("Компонент видалено");
+                }
+            } else {
+                printMenuItem("Видалення скасовано");;
+            }
+        } else {
+            printMenuItem(format("\nКомпонент з ID {} не знайдено", id));
         }
         awaitKey();
     }

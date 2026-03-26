@@ -19,4 +19,13 @@ public:
     virtual void showInfo() = 0;
 };
 
+inline string componentTypeToString(ComponentType type) {
+    switch (type) {
+    case ComponentType::Resistor:   return "Resistor";
+    case ComponentType::Diode:      return "Diode";
+    case ComponentType::Transistor: return "Transistor";
+    case ComponentType::Capacitor:  return "Capacitor";
+    default:                        return "Unknown";
+    }
+}
 #endif

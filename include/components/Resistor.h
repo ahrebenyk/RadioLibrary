@@ -11,6 +11,8 @@ private:
     double power;
 public:
     Resistor(int id, string name, double res, double pwr);
+    double getResistance() const { return resistance; }
+    double getPower() const { return power; }
     void showInfo() override;
 };
 
