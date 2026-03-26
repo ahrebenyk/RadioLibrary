@@ -7,10 +7,10 @@ Diode::Diode(int id, std::string name, double current, double voltage, string ma
     : Component(id, name, ComponentType::Diode), current(current), voltage(voltage), material(mat) {}
 
 void Diode::showInfo() {
-    cout << "ID: " << id << "\n";
-    cout << "Тип: Діод\n";
-    cout << "Назва: " << name << "\n";
-    cout << "Струм: " << current << " А\n";
-    cout << "Напруга: " << voltage << " В\n";
-    cout << "Матеріал: " << material << "\n";
+    cout << "ID:\t\t" << id << "\n";
+    cout << "Тип:\t\tДіод\n";
+    cout << "Назва:\t\t" << name << "\n";
+    cout << "Струм:\t\t" << current << " А\n";
+    cout << "Напруга:\t" << voltage << " В\n";
+    cout << "Матеріал:\t" << material << "\n";
 }

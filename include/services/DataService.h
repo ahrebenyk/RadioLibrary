@@ -19,10 +19,10 @@ public:
     ~DataService() = default;
     void load();
     Component* getById(int targetId);
+    vector<Component*> searchByType(ComponentType type);
     void save();
     void add(Component* c);
-    void print();
-    void printByType(ComponentType type);
+    vector<Component*> getAll();
     vector<Component*> searchByName(const string& namePart);
     void clear();
 };

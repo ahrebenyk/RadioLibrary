@@ -8,9 +8,9 @@ Capacitor::Capacitor(int id, string name, double volt, double cap)
     : Component(id, name, ComponentType::Capacitor), voltage(volt), capacity(cap) {}
 
 void Capacitor::showInfo() {
-    cout << "ID: " << id << "\n";
-    cout << "Тип: Конденсатор\n";
-    cout << "Назва: " << name << "\n";
-    cout << "Напруга: " << voltage << " В\n";
-    cout << "Ємність: " << capacity << " мФ\n";
+    cout << "ID:\t\t" << id << "\n";
+    cout << "Тип:\t\tКонденсатор\n";
+    cout << "Назва:\t\t" << name << "\n";
+    cout << "Напруга:\t" << voltage << " В\n";
+    cout << "Ємність:\t" << capacity << " мФ\n";
 }

@@ -19,20 +19,15 @@ void DataService::load() {
     }
 }
 
-void DataService::print() {
-    for (const auto& item : database) {
-        item->showInfo();
-        cout << endl;
-    }
-}
+vector<Component*> DataService::getAll() {
+    vector<Component*> all;
+    all.reserve(database.size());
 
-void DataService::printByType(ComponentType type) {
     for (const auto& item : database) {
-        if (item->getType() == type) {
-            item->showInfo();
-            cout << endl;
-        }
+        all.push_back(item.get());
     }
+
+    return all;
 }
 
 Component* DataService::getById(int targetId) {
@@ -42,6 +37,16 @@ Component* DataService::getById(int targetId) {
         }
     }
     return nullptr;
+}
+
+vector<Component*> DataService::searchByType(const ComponentType type) {
+    std::vector<Component*> results;
+    for (const auto& item : database) {
+        if (item->getType() == type) {
+            results.push_back(item.get());
+        }
+    }
+    return results;
 }
 
 vector<Component*> DataService::searchByName(const string& namePart) {

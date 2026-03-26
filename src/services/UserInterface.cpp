@@ -14,13 +14,13 @@ void UserInterface::clearInput() {
 void UserInterface::showMainMenu() {
     while (true) {
         clearScreen();
-        cout << MENU_COLOR << "\n------- ГОЛОВНЕ МЕНЮ -------\n";
+        cout << MENU_COLOR << "\n------------- ГОЛОВНЕ МЕНЮ -------------\n";
         cout << "1. Показати всі компоненти\n";
         cout << "2. Пошук за типом\n";
         cout << "3. Пошук за ID\n";
         cout << "4. Пошук за назвою\n";
         cout << "0. Вихід\n";
-        cout << "----------------------------\n";
+        cout << "----------------------------------------\n";
         cout << endl << RESET;
 
         char choice = _getch();
@@ -28,7 +28,7 @@ void UserInterface::showMainMenu() {
         switch (choice) {
             case '1':
                 clearScreen();
-                ds.print();
+                printAllComponents();
                 awaitKey();
                 break;
             case '2':
@@ -45,6 +45,7 @@ void UserInterface::showMainMenu() {
                 return;
             default:
                 cout << "Невірний пункт меню.\n";
+                awaitKey();
         }
 
     }
@@ -59,73 +60,95 @@ void UserInterface::showSearchByTypeMenu() {
         cout << "3. Транзистори\n";
         cout << "4. Конденсатори\n";
         cout << "0. Назад у головне меню\n";
-        cout << "--------------------------------\n";
+        cout << "----------------------------------------\n";
         cout << endl << RESET;
 
         char choice = _getch();
 
         switch (choice) {
             case '1':
-                ds.printByType(ComponentType::Resistor);
+                clearScreen();
+                printComponentsByType(ComponentType::Resistor);
                 awaitKey();
                 break;
             case '2':
-                ds.printByType(ComponentType::Diode);
+                clearScreen();
+                printComponentsByType(ComponentType::Diode);
                 awaitKey();
                 break;
             case '3':
-                ds.printByType(ComponentType::Transistor);
+                clearScreen();
+                printComponentsByType(ComponentType::Transistor);
                 awaitKey();
                 break;
             case '4':
-                ds.printByType(ComponentType::Capacitor);
+                clearScreen();
+                printComponentsByType(ComponentType::Capacitor);
                 awaitKey();
                 break;
             case '0':
                 return;
-            default: cout << "Невірний тип.\n";
+            default:
+                cout << "Невірний пункт меню.\n";
+                awaitKey();
         }
     }
 }
 
 void UserInterface::getByIdMenu() {
-    clearScreen();
-    int searchId;
-    cout << MENU_COLOR << "Введіть ID компонента: " << RESET;
+    bool idEntered = false;
+    while (!idEntered) {
+        clearScreen();
+        int searchId;
+        cout << MENU_COLOR << "Введіть ID компонента: " << RESET;
 
-    if (!(cin >> searchId)) {
-        clearInput();
-        return;
+        if (!(cin >> searchId)) {
+            cout << MENU_COLOR << "Помилка: введіть ціле число" << RESET;
+            clearInput();
+            awaitKey();
+            continue;
+        }
+
+        idEntered = true;
+        Component* result = ds.getById(searchId);
+
+        if (result) {
+            cout << "\nЗнайдено компонент:\n";
+            result->showInfo();
+        } else {
+            cout << "\nКомпонент з ID " << searchId << " не знайдено.\n";
+        }
+        awaitKey();
     }
-
-    Component* found = ds.getById(searchId);
-
-    if (found) {
-        cout << "\nЗнайдено компонент:\n";
-        found->showInfo();
-    } else {
-        cout << "\nКомпонент з ID " << searchId << " не знайдено.\n";
-    }
-    awaitKey();
 }
 
 void UserInterface::searchByNameMenu() {
     clearScreen();
     string namePart;
     cout << MENU_COLOR << "Введіть частину назви компонента: " << RESET;
-
     getline(cin >> std::ws, namePart);
     vector<Component*> results = ds.searchByName(namePart);
-
-    if (!results.empty()) {
-        cout << "\nЗнайдено компонентів: \n" << results.size();
-        for (auto* comp : results) {
-            comp->showInfo();
-        }
-    } else {
-        cout << "\nКомпонент за ім'ям " << namePart << " не знайдено.\n";
-    }
+    printComponents(results);
     awaitKey();
+}
+
+void UserInterface::printAllComponents() {
+    auto results = ds.getAll();
+    printComponents(results);
+}
+
+void UserInterface::printComponentsByType(ComponentType type) {
+    auto results = ds.searchByType(type);
+    printComponents(results);
+}
+
+void UserInterface::printComponents(const std::vector<Component*>& components) {
+    cout << "\nЗнайдено компонентів: " << components.size() << "\n\n";
+    cout << "----------------------------------------\n";
+    for (auto* comp : components) {
+        comp->showInfo();
+        cout << "----------------------------------------\n";
+    }
 }
 
 void UserInterface::clearScreen() {

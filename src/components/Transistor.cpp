@@ -15,11 +15,11 @@ string Transistor::getTransistorTypeString() const {
 }
 
 void Transistor::showInfo() {
-    cout << "ID: " << id << "\n";
-    cout << "Тип: Транзистор\n";
-    cout << "Назва: " << name << "\n";
-    cout << "Тип провідності: " << getTransistorTypeString() << "\n";
-    cout << "Напруга: " << voltage << " В\n";
-    cout << "Струм: " << current << " А\n";
-    cout << "Підсилення: " << gain << "\n";
+    cout << "ID:\t\t" << id << "\n";
+    cout << "Тип:\t\tТранзистор\n";
+    cout << "Назва:\t\t" << name << "\n";
+    cout << "Провідність:\t" << getTransistorTypeString() << "\n";
+    cout << "Напруга:\t" << voltage << " В\n";
+    cout << "Струм:\t\t" << current << " А\n";
+    cout << "Підсилення:\t" << gain << "\n";
 }

@@ -7,9 +7,9 @@ Resistor::Resistor(int id, string name, double res, double pwr)
     : Component(id, name, ComponentType::Resistor), resistance(res), power(pwr) {}
 
 void Resistor::showInfo() {
-    cout << "ID: " << id << "\n";
-    cout << "Тип: Резистор\n";
-    cout << "Назва: " << name << "\n";
-    cout << "Опір: " << resistance << " Ом\n";
-    cout << "Потужність: " << power << " Вт\n";
+    cout << "ID:\t\t" << id << "\n";
+    cout << "Тип:\t\tРезистор\n";
+    cout << "Назва:\t\t" << name << "\n";
+    cout << "Опір:\t\t" << resistance << " Ом\n";
+    cout << "Потужність:\t" << power << " Вт\n";
 }
