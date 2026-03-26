@@ -1,33 +1,95 @@
 [
   {
+    "id": 101,
     "type": "Resistor",
-    "id": 1,
-    "name": "MLT-0.25",
-    "resistance": 1000.0,
+    "name": "Metal Film 10k",
+    "resistance": 10000.0,
     "power": 0.25
   },
   {
+    "id": 102,
+    "type": "Resistor",
+    "name": "Power Resistor 1R",
+    "resistance": 1.0,
+    "power": 5.0
+  },
+  {
+    "id": 103,
+    "type": "Resistor",
+    "name": "SMD 0805 4.7k",
+    "resistance": 4700.0,
+    "power": 0.125
+  },
+  {
+    "id": 201,
     "type": "Diode",
-    "id": 4,
-    "name": "1N4007",
+    "name": "1N4148 Signal",
+    "current": 0.3,
+    "voltage": 100.0,
+    "material": "Silicon"
+  },
+  {
+    "id": 202,
+    "type": "Diode",
+    "name": "1N4007 Rectifier",
     "current": 1.0,
     "voltage": 1000.0,
     "material": "Silicon"
   },
   {
-    "type": "Transistor",
-    "id": 7,
-    "name": "BC547",
-    "polarity": "NPN",
-    "voltage": 45.0,
-    "current": 0.1,
-    "gain": 200
+    "id": 203,
+    "type": "Diode",
+    "name": "SR560 Schottky",
+    "current": 5.0,
+    "voltage": 60.0,
+    "material": "Schottky"
   },
   {
+    "id": 301,
+    "type": "Transistor",
+    "name": "BC547 NPN",
+    "current": 0.1,
+    "gain": 200.0,
+    "voltage": 0.5,
+    "polarity": "NPN"
+  },
+  {
+    "id": 302,
+    "type": "Transistor",
+    "current": 1.0,
+    "name": "2N3055 Power",
+    "gain": 20.0,
+    "voltage": 115.0,
+    "polarity": "NPN"
+  },
+  {
+    "id": 303,
+    "type": "Transistor",
+    "current": 10,
+    "name": "IRFZ44N MOSFET",
+    "gain": 0.0,
+    "voltage": 94.0,
+    "polarity": "PNP"
+  },
+  {
+    "id": 401,
     "type": "Capacitor",
-    "id": 12,
-    "name": "Electrolytic 100uF",
-    "capacity": 100.0,
+    "name": "Electrolytic 1000uF",
+    "capacity": 0.001,
     "voltage": 25.0
+  },
+  {
+    "id": 402,
+    "type": "Capacitor",
+    "name": "Ceramic 100nF",
+    "capacity": 0.0000001,
+    "voltage": 50.0
+  },
+  {
+    "id": 403,
+    "type": "Capacitor",
+    "name": "Tantalum 10uF",
+    "capacity": 0.00001,
+    "voltage": 16.0
   }
 ]

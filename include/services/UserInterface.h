@@ -13,10 +13,12 @@ private:
     void searchByNameMenu();
     void printAllComponents();
     void printComponentsByType(ComponentType type);
-    void printComponents(const std::vector<Component*>& components);
+    static void printComponents(const std::vector<Component*>& components);
     static void clearScreen();
     static void awaitKey();
-    void clearInput();
+    static void clearInput();
+    static void printMenuLine();
+    static void printMenuItem(const string& item);
 
 public:
     UserInterface(DataService& dataService);

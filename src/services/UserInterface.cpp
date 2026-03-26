@@ -2,26 +2,21 @@
 #include <iostream>
 #include <limits>
 #include <conio.h>
+#include <format>
 
 UserInterface::UserInterface(DataService& dataService) : ds(dataService) {
-}
-
-void UserInterface::clearInput() {
-    cin.clear();
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
 void UserInterface::showMainMenu() {
     while (true) {
         clearScreen();
-        cout << MENU_COLOR << "\n------------- ГОЛОВНЕ МЕНЮ -------------\n";
-        cout << "1. Показати всі компоненти\n";
-        cout << "2. Пошук за типом\n";
-        cout << "3. Пошук за ID\n";
-        cout << "4. Пошук за назвою\n";
-        cout << "0. Вихід\n";
-        cout << "----------------------------------------\n";
-        cout << endl << RESET;
+        printMenuItem("------------- ГОЛОВНЕ МЕНЮ -------------");
+        printMenuItem("1. Показати всі компоненти");
+        printMenuItem("2. Пошук за типом");
+        printMenuItem("3. Пошук за ID");
+        printMenuItem("4. Пошук за назвою");
+        printMenuItem("0. Вихід");
+        printMenuLine();
 
         char choice = _getch();
 
@@ -41,10 +36,9 @@ void UserInterface::showMainMenu() {
                 searchByNameMenu();
                 break;
             case '0':
-                cout << "Завершення роботи...\n";
                 return;
             default:
-                cout << "Невірний пункт меню.\n";
+                printMenuItem("Невірний пункт меню");
                 awaitKey();
         }
 
@@ -54,14 +48,13 @@ void UserInterface::showMainMenu() {
 void UserInterface::showSearchByTypeMenu() {
     while (true) {
         clearScreen();
-        cout << MENU_COLOR << "\n--- ВИБЕРІТЬ ТИП КОМПОНЕНТІВ ---\n";
-        cout << "1. Резистори\n";
-        cout << "2. Діоди\n";
-        cout << "3. Транзистори\n";
-        cout << "4. Конденсатори\n";
-        cout << "0. Назад у головне меню\n";
-        cout << "----------------------------------------\n";
-        cout << endl << RESET;
+        printMenuItem("------- ВИБЕРІТЬ ТИП КОМПОНЕНТІВ -------");
+        printMenuItem("1. Резистори");
+        printMenuItem("2. Діоди");
+        printMenuItem("3. Транзистори");
+        printMenuItem("4. Конденсатори");
+        printMenuItem("0. Назад у головне меню");
+        printMenuLine();
 
         char choice = _getch();
 
@@ -89,7 +82,7 @@ void UserInterface::showSearchByTypeMenu() {
             case '0':
                 return;
             default:
-                cout << "Невірний пункт меню.\n";
+                printMenuItem("Невірний пункт меню");
                 awaitKey();
         }
     }
@@ -100,10 +93,10 @@ void UserInterface::getByIdMenu() {
     while (!idEntered) {
         clearScreen();
         int searchId;
-        cout << MENU_COLOR << "Введіть ID компонента: " << RESET;
+        printMenuItem("Введіть ID компонента:");
 
         if (!(cin >> searchId)) {
-            cout << MENU_COLOR << "Помилка: введіть ціле число" << RESET;
+            printMenuItem("Помилка: введіть ціле число");
             clearInput();
             awaitKey();
             continue;
@@ -113,10 +106,12 @@ void UserInterface::getByIdMenu() {
         Component* result = ds.getById(searchId);
 
         if (result) {
-            cout << "\nЗнайдено компонент:\n";
+            printMenuItem("\nЗнайдено компонент:");
+            printMenuLine();
             result->showInfo();
+            printMenuLine();
         } else {
-            cout << "\nКомпонент з ID " << searchId << " не знайдено.\n";
+            printMenuItem(format("\nКомпонент з ID {} не знайдено", searchId));
         }
         awaitKey();
     }
@@ -125,7 +120,7 @@ void UserInterface::getByIdMenu() {
 void UserInterface::searchByNameMenu() {
     clearScreen();
     string namePart;
-    cout << MENU_COLOR << "Введіть частину назви компонента: " << RESET;
+    printMenuItem("Введіть частину назви компонента:");
     getline(cin >> std::ws, namePart);
     vector<Component*> results = ds.searchByName(namePart);
     printComponents(results);
@@ -143,12 +138,25 @@ void UserInterface::printComponentsByType(ComponentType type) {
 }
 
 void UserInterface::printComponents(const std::vector<Component*>& components) {
-    cout << "\nЗнайдено компонентів: " << components.size() << "\n\n";
-    cout << "----------------------------------------\n";
+    printMenuItem(format("\nЗнайдено компонентів: {} \n", components.size()));
+    printMenuLine();
     for (auto* comp : components) {
         comp->showInfo();
-        cout << "----------------------------------------\n";
+        printMenuLine();
     }
+}
+
+void UserInterface::clearInput() {
+    cin.clear();
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+}
+
+void UserInterface::printMenuLine() {
+    printMenuItem("----------------------------------------");
+}
+
+void UserInterface::printMenuItem(const string& item) {
+    cout << MENU_COLOR << item << RESET << endl;
 }
 
 void UserInterface::clearScreen() {
@@ -156,9 +164,7 @@ void UserInterface::clearScreen() {
 }
 
 void UserInterface::awaitKey() {
-    cout << MENU_COLOR;
-    cout << "\nНатисніть будь-яку клавішу, щоб повернутися...";
-    cout << RESET;
+    printMenuItem("\nНатисніть будь-яку клавішу, щоб повернутися...");
     _getch();
 }
 

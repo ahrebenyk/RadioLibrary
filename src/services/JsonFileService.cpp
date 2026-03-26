@@ -72,13 +72,10 @@ unique_ptr<Diode> JsonFileService::parseDiode(const json& j) {
 }
 
 unique_ptr<Transistor> JsonFileService::parseTransistor(const json& j) {
-    string tStr = j.at("polarity").get<string>();
-    TransistorType tEnum = (tStr == "PNP") ? TransistorType::PNP : TransistorType::NPN;
-
     return make_unique<Transistor>(
         j.at("id").get<int>(),
         j.at("name").get<string>(),
-        tEnum,
+        j.at("polarity").get<string>(),
         j.at("voltage").get<double>(),
         j.at("current").get<double>(),
         j.at("gain").get<int>()
