@@ -3,7 +3,7 @@
 #include <string>
 using namespace std;
 
-enum class ComponentType { Resistor, Diode, Transistor, Capacitor, Unknown };
+enum class ComponentType { Resistor, Diode, Transistor, Capacitor };
 
 class Component {
 protected:
@@ -25,6 +25,16 @@ inline string componentTypeToString(ComponentType type) {
     case ComponentType::Diode:      return "Diode";
     case ComponentType::Transistor: return "Transistor";
     case ComponentType::Capacitor:  return "Capacitor";
+    default:                        return "Unknown";
+    }
+}
+
+inline string componentTypeToUkString(ComponentType type) {
+    switch (type) {
+    case ComponentType::Resistor:   return "Резистор";
+    case ComponentType::Diode:      return "Діод";
+    case ComponentType::Transistor: return "Транзистор";
+    case ComponentType::Capacitor:  return "Конденсатор";
     default:                        return "Unknown";
     }
 }

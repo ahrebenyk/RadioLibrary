@@ -25,6 +25,8 @@ public:
     vector<Component*> getAll();
     vector<Component*> searchByName(const string& namePart);
     bool deleteById(int id);
+    void add(unique_ptr<Component> component);
+    int getNextId() const;
     void clear();
 };
 #endif

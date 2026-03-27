@@ -17,8 +17,7 @@ vector<unique_ptr<Component>> JsonFileService::loadFromFile(const string& filena
             auto comp = parseComponent(item);
             if (comp) components.push_back(std::move(comp));
         }
-    }
-    catch (const json::parse_error& e) {
+    } catch (const json::parse_error& e) {
         std::cerr << "JSON Error: " << e.what() << std::endl;
     }
 

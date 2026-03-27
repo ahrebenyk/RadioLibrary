@@ -71,7 +71,7 @@ bool DataService::deleteById(int id) {
         database,
         [id](const unique_ptr<Component>& item) {
             return item->getId() == id;
-    });
+        });
 
     if (it != database.end()) {
         database.erase(it);
@@ -80,4 +80,19 @@ bool DataService::deleteById(int id) {
     }
 
     return false;
+}
+
+void DataService::add(unique_ptr<Component> component) {
+    if (component != nullptr) {
+        database.push_back(std::move(component));
+        JsonFileService::saveToFile(this->filename, database);
+    }
+}
+
+int DataService::getNextId() const {
+    if (database.empty()) {
+        return 1;
+    }
+
+    return database.back()->getId() + 1;
 }
