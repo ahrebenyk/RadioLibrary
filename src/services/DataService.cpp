@@ -5,7 +5,7 @@
 
 using namespace std;
 
-DataService::DataService(string dbFile) : filename(dbFile) {
+DataService::DataService(string dbFile, shared_ptr<User> user) : filename(dbFile), currentUser(user){
 }
 
 void DataService::clear() {
@@ -67,6 +67,7 @@ vector<Component*> DataService::searchByName(const string& namePart) {
 }
 
 bool DataService::deleteById(int id) {
+    checkAdminAccess();
     auto it = ranges::find_if(
         database,
         [id](const unique_ptr<Component>& item) {
@@ -83,6 +84,7 @@ bool DataService::deleteById(int id) {
 }
 
 void DataService::add(unique_ptr<Component> component) {
+    checkAdminAccess();
     if (component != nullptr) {
         database.push_back(std::move(component));
         save();
@@ -90,6 +92,7 @@ void DataService::add(unique_ptr<Component> component) {
 }
 
 void DataService::save() {
+    checkAdminAccess();
     try {
         JsonFileService::saveToFile(this->filename, database);
     } catch (const exception& e) {
@@ -103,4 +106,10 @@ int DataService::getNextId() const {
     }
 
     return database.back()->getId() + 1;
+}
+
+void DataService::checkAdminAccess() {
+    if (!currentUser->isAdmin()) {
+        throw std::runtime_error("Відмовлено в доступі!");
+    }
 }

@@ -3,16 +3,42 @@
 #include <limits>
 #include <conio.h>
 #include <format>
+#include <thread>
 
 #include "components/Resistor.h"
 #include "components/Transistor.h"
 #include "services/JsonFileService.h"
 
-UserInterface::UserInterface(DataService& dataService) : ds(dataService) {
+UserInterface::UserInterface(DataService& dataService, shared_ptr<User> user) :
+    ds(dataService), currentUser(user) {
+}
+
+void UserInterface::start() {
+    clearScreen();
+    printMenuItem("---------- Оберіть користувача ---------");
+    printMenuItem("1. Гість (лише перегляд)");
+    printMenuItem("2. Адміністратор (повний доступ)");
+    printMenuItem("0. Вихід");
+    printMenuLine();
+    char option = getSelectedOption({'1', '2', '0'});
+    switch (option) {
+    case '1': {
+        currentUser->setRole(UserRole::GUEST);
+        break;
+    }
+    case '2': {
+        currentUser->setRole(UserRole::ADMIN);
+        break;
+    }
+    case '0':
+        return;
+    default:
+        showError("Невірний пункт меню, натисніть цифру для вибору");
+    }
+    showMainMenu();
 }
 
 void UserInterface::showMainMenu() {
-    string infoMessage;
     while (true) {
         clearScreen();
         printMenuItem("------------- ГОЛОВНЕ МЕНЮ -------------");
@@ -20,18 +46,17 @@ void UserInterface::showMainMenu() {
         printMenuItem("2. Пошук за типом");
         printMenuItem("3. Пошук за ID");
         printMenuItem("4. Пошук за назвою");
-        printMenuItem("5. Додати компонент");
-        printMenuItem("6. Редагувати компонент");
-        printMenuItem("7. Видалити компонент");
+        if (currentUser->isAdmin()) {
+            printMenuItem("5. Додати компонент");
+            printMenuItem("6. Редагувати компонент");
+            printMenuItem("7. Видалити компонент");
+        }
         printMenuItem("0. Вихід");
         printMenuLine();
-        printInfoItem("Натисніть відповідну клавішу для вибору");
-        if (!infoMessage.empty()) {
-            printInfoItem(infoMessage);
-            infoMessage = "";
-        }
 
-        switch (_getch()) {
+        vector<char> allowedOptions = currentUser->isAdmin() ? ADMIN_OPTIONS : GUEST_OPTIONS;
+
+        switch (getSelectedOption(allowedOptions)) {
         case '1':
             clearScreen();
             printAllComponents();
@@ -58,7 +83,7 @@ void UserInterface::showMainMenu() {
         case '0':
             return;
         default:
-            infoMessage = "Невірний пункт меню, натисніть цифру для вибору";
+            showError("Невірний пункт меню, натисніть цифру для вибору");
         }
     }
 }
@@ -185,6 +210,7 @@ void UserInterface::editComponentMenu() {
 
     if (!comp) {
         printErrorItem(format("\nКомпонент з ID {} не знайдено", id));
+        awaitKey();
         return;
     }
 
@@ -201,9 +227,7 @@ void UserInterface::editComponentMenu() {
 
 void UserInterface::editResistorMenu(Component* component) {
     auto* resistor = dynamic_cast<Resistor*>(component);
-
     clearScreen();
-    string infoMessage;
 
     bool editing = true;
     while (editing) {
@@ -218,32 +242,27 @@ void UserInterface::editResistorMenu(Component* component) {
         printMenuItem("0. Повернутися");
         printMenuLine();
 
-        if (!infoMessage.empty()) {
-            printInfoItem(infoMessage);
-            infoMessage = "";
+        switch (getSelectedOption({'1', '2', '3', '0'})) {
+        case '1': {
+            resistor->setName(readString("Введіть нову назву: "));
+            showInfoMessage("Назву змінено");
+            break;
         }
-
-        switch (_getch()) {
-            case '1': {
-                resistor->setName(readString("Нова назва: "));
-                infoMessage = "Назву змінено";
-                break;
-            }
-            case '2': {
-                resistor->setResistance(readDouble("Введіть нове значення опору (Ом): "));
-                infoMessage = "Значення опору змінено";
-                break;
-            }
-            case '3': {
-                resistor->setPower(readDouble("Введіть нове значення потужності (Вт): "));
-                infoMessage = "Значення потужності змінено";
-                break;
-            }
-            case '0':
-                editing = false;
-                break;
-            default:
-                infoMessage = "Невірний пункт меню, натисніть цифру для вибору";
+        case '2': {
+            resistor->setResistance(readDouble("Введіть нове значення опору (Ом): "));
+            showInfoMessage("Значення опору змінено");
+            break;
+        }
+        case '3': {
+            resistor->setPower(readDouble("Введіть нове значення потужності (Вт): "));
+            showInfoMessage("Значення потужності змінено");
+            break;
+        }
+        case '0':
+            editing = false;
+            break;
+        default:
+            showError("Невірний пункт меню, натисніть цифру для вибору");
         }
     }
     ds.save();
@@ -251,9 +270,7 @@ void UserInterface::editResistorMenu(Component* component) {
 
 void UserInterface::editDiodeMenu(Component* component) {
     auto* diode = dynamic_cast<Diode*>(component);
-
     clearScreen();
-    string infoMessage;
 
     bool editing = true;
     while (editing) {
@@ -269,48 +286,40 @@ void UserInterface::editDiodeMenu(Component* component) {
         printMenuItem("0. Повернутися");
         printMenuLine();
 
-        if (!infoMessage.empty()) {
-            printInfoItem(infoMessage);
-            infoMessage = "";
+        switch (getSelectedOption({'1', '2', '3', '4', '0'})) {
+        case '1': {
+            diode->setName(readString("Введіть нову назву: "));
+            showInfoMessage("Назву змінено");
+            break;
         }
-
-        switch (_getch()) {
-            case '1': {
-                diode->setName(readString("Нова назва: "));
-                infoMessage = "Назву змінено";
-                break;
-            }
-            case '2': {
-                diode->setCurrent(readDouble("Введіть нове значення струму (А): "));
-                infoMessage = "Значення струму змінено";
-                break;
-            }
-            case '3': {
-                diode->setVoltage(readDouble("Введіть нове значення напруги (В): "));
-                infoMessage = "Значення напруги змінено";
-                break;
-            }
-            case '4': {
-                diode->setMaterial(readString("Введіть нове значення матеріалу: "));
-                infoMessage = "Значення матеріалу змінено";
-                break;
-            }
-            case '0':
-                editing = false;
-                break;
-            default:
-                infoMessage = "Невірний пункт меню, натисніть цифру для вибору";
+        case '2': {
+            diode->setCurrent(readDouble("Введіть нове значення струму (А): "));
+            showInfoMessage("Значення струму змінено");
+            break;
+        }
+        case '3': {
+            diode->setVoltage(readDouble("Введіть нове значення напруги (В): "));
+            showInfoMessage("Значення напруги змінено");
+            break;
+        }
+        case '4': {
+            diode->setMaterial(readString("Введіть нове значення матеріалу: "));
+            showInfoMessage("Значення матеріалу змінено");
+            break;
+        }
+        case '0':
+            editing = false;
+            break;
+        default:
+            showError("Невірний пункт меню, натисніть цифру для вибору");
         }
     }
-
     ds.save();
 }
 
 void UserInterface::editTransistorMenu(Component* component) {
     auto* diode = dynamic_cast<Transistor*>(component);
-
     clearScreen();
-    string infoMessage;
 
     bool editing = true;
     while (editing) {
@@ -327,53 +336,45 @@ void UserInterface::editTransistorMenu(Component* component) {
         printMenuItem("0. Повернутися");
         printMenuLine();
 
-        if (!infoMessage.empty()) {
-            printInfoItem(infoMessage);
-            infoMessage = "";
+        switch (getSelectedOption({'1', '2', '3', '4', '5', '0'})) {
+        case '1': {
+            diode->setName(readString("Введіть нову назву: "));
+            showInfoMessage("Назву змінено");
+            break;
         }
-
-        switch (_getch()) {
-            case '1': {
-                diode->setName(readString("Нова назва: "));
-                infoMessage = "Назву змінено";
-                break;
-            }
-            case '2': {
-                diode->setPolarity(readString("Введіть нове значення провідності (А): "));
-                infoMessage = "Значення провідності змінено";
-                break;
-            }
-            case '3': {
-                diode->setVoltage(readDouble("Введіть нове значення напруги (В): "));
-                infoMessage = "Значення напруги змінено";
-                break;
-            }
-            case '4': {
-                diode->setCurrent(readDouble("Введіть нове значення струму: "));
-                infoMessage = "Значення струму змінено";
-                break;
-            }
-            case '5': {
-                diode->setGain(readDouble("Введіть нове значення підсилення: "));
-                infoMessage = "Значення підсилення змінено";
-                break;
-            }
-            case '0':
-                editing = false;
-                break;
-            default:
-                infoMessage = "Невірний пункт меню, натисніть цифру для вибору";
+        case '2': {
+            diode->setPolarity(readString("Введіть нове значення провідності: "));
+            showInfoMessage("Значення провідності змінено");
+            break;
+        }
+        case '3': {
+            diode->setVoltage(readDouble("Введіть нове значення напруги (В): "));
+            showInfoMessage("Значення напруги змінено");
+            break;
+        }
+        case '4': {
+            diode->setCurrent(readDouble("Введіть нове значення струму: "));
+            showInfoMessage("Значення струму змінено");
+            break;
+        }
+        case '5': {
+            diode->setGain(readDouble("Введіть нове значення підсилення: "));
+            showInfoMessage("Значення підсилення змінено");
+            break;
+        }
+        case '0':
+            editing = false;
+            break;
+        default:
+            showError("Невірний пункт меню, натисніть цифру для вибору");
         }
     }
-
     ds.save();
 }
 
 void UserInterface::editCapacitorMenu(Component* component) {
     auto* diode = dynamic_cast<Capacitor*>(component);
-
     clearScreen();
-    string infoMessage;
     bool editing = true;
     while (editing) {
         clearScreen();
@@ -387,32 +388,27 @@ void UserInterface::editCapacitorMenu(Component* component) {
         printMenuItem("0. Повернутися");
         printMenuLine();
 
-        if (!infoMessage.empty()) {
-            printInfoItem(infoMessage);
-            infoMessage = "";
+        switch (getSelectedOption({'1', '2', '3', '0'})) {
+        case '1': {
+            diode->setName(readString("Введіть нову назву: "));
+            showInfoMessage("Назву змінено");
+            break;
         }
-
-        switch (_getch()) {
-            case '1': {
-                diode->setName(readString("Нова назва: "));
-                infoMessage = "Назву змінено";
-                break;
-            }
-            case '2': {
-                diode->setVoltage(readDouble("Введіть нове значення напруги (А): "));
-                infoMessage = "Значення напруги змінено";
-                break;
-            }
-            case '3': {
-                diode->setCapacity(readDouble("Введіть нове значення ємності (мФ): "));
-                infoMessage = "Значення ємності змінено";
-                break;
-            }
-            case '0':
-                editing = false;
-                break;
-            default:
-                infoMessage = "Невірний пункт меню, натисніть цифру для вибору";
+        case '2': {
+            diode->setVoltage(readDouble("Введіть нове значення напруги (В): "));
+            showInfoMessage("Значення напруги змінено");
+            break;
+        }
+        case '3': {
+            diode->setCapacity(readDouble("Введіть нове значення ємності (мФ): "));
+            showInfoMessage("Значення ємності змінено");
+            break;
+        }
+        case '0':
+            editing = false;
+            break;
+        default:
+            showError("Невірний пункт меню, натисніть цифру для вибору");
         }
     }
 
@@ -439,6 +435,17 @@ void UserInterface::printComponents(const std::vector<Component*>& components) {
     }
 }
 
+char UserInterface::getSelectedOption(const std::vector<char>& allowedChars) {
+    printInfoItem("Натисніть відповідну клавішу для вибору");
+    do {
+        char input = _getch();
+        if (std::find(allowedChars.begin(), allowedChars.end(), input) != allowedChars.end()) {
+            return input;
+        }
+        showError("Невірний пункт меню, натисніть цифру для вибору");
+    } while (true);
+}
+
 int UserInterface::readInt(const string& prompt) {
     int value;
     while (true) {
@@ -462,12 +469,7 @@ ComponentType UserInterface::readComponentType() {
         printMenuItem("3. Транзистор");
         printMenuItem("4. Конденсатор");
         printMenuLine();
-        printInfoItem("Натисніть відповідну клавішу для вибору");
-        if (!errorMessage.empty()) {
-            printErrorItem(errorMessage);
-        }
-        char choice = _getch();
-        switch (choice) {
+        switch (getSelectedOption({'1', '2', '3', '4'})) {
         case '1':
             return ComponentType::Resistor;
         case '2':
@@ -477,7 +479,7 @@ ComponentType UserInterface::readComponentType() {
         case '4':
             return ComponentType::Capacitor;
         default:
-            errorMessage = "Невірний пункт меню, натисніть цифру для вибору";
+            showError("Невірний пункт меню, натисніть цифру для вибору");
         }
     }
 }
@@ -547,6 +549,24 @@ void UserInterface::printErrorItem(const string& item) {
 
 void UserInterface::printInfoItem(const string& item) {
     cout << INFO_COLOR << item << RESET_COLOR << endl;
+}
+
+void UserInterface::showError(const string& message) {
+    cout << ERROR_COLOR;
+    showTemporaryMessage(message);
+    cout << RESET_COLOR;
+}
+
+void UserInterface::showInfoMessage(const string& message) {
+    cout << INFO_COLOR;
+    showTemporaryMessage(message);
+    cout << RESET_COLOR;
+}
+
+void UserInterface::showTemporaryMessage(const string& message) {
+    cout << message;
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    cout << "\r" << std::string(message.length() + 15, ' ') << "\r" << flush;
 }
 
 void UserInterface::printLine(const string& item) {
