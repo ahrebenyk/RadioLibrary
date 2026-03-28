@@ -14,6 +14,11 @@ UserInterface::UserInterface(DataService& dataService, shared_ptr<User> user) :
 }
 
 void UserInterface::start() {
+    selectUserMenu();
+    showMainMenu();
+}
+
+void UserInterface::selectUserMenu() {
     clearScreen();
     printMenuItem("---------- Оберіть користувача ---------");
     printMenuItem("1. Гість (лише перегляд)");
@@ -35,7 +40,6 @@ void UserInterface::start() {
     default:
         showError("Невірний пункт меню, натисніть цифру для вибору");
     }
-    showMainMenu();
 }
 
 void UserInterface::showMainMenu() {
@@ -46,10 +50,11 @@ void UserInterface::showMainMenu() {
         printMenuItem("2. Пошук за типом");
         printMenuItem("3. Пошук за ID");
         printMenuItem("4. Пошук за назвою");
+        printMenuItem("5. Змінити користувача");
         if (currentUser->isAdmin()) {
-            printMenuItem("5. Додати компонент");
-            printMenuItem("6. Редагувати компонент");
-            printMenuItem("7. Видалити компонент");
+            printMenuItem("6. Додати компонент");
+            printMenuItem("7. Редагувати компонент");
+            printMenuItem("8. Видалити компонент");
         }
         printMenuItem("0. Вихід");
         printMenuLine();
@@ -72,12 +77,15 @@ void UserInterface::showMainMenu() {
             searchByNameMenu();
             break;
         case '5':
-            addComponentMenu();
+            selectUserMenu();
             break;
         case '6':
-            editComponentMenu();
+            addComponentMenu();
             break;
         case '7':
+            editComponentMenu();
+            break;
+        case '8':
             deleteByIdMenu();
             break;
         case '0':
