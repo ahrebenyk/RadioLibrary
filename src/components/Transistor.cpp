@@ -7,6 +7,7 @@ Transistor::Transistor(int id, string name, string polarity, double voltage, dou
     : Component(id, name, ComponentType::Transistor), polarity(polarity), voltage(voltage), current(current), gain(gain) {}
 
 void Transistor::showInfo() {
+    cout << COMPONENT_COLOR;
     cout << "ID:\t\t" << id << "\n";
     cout << "Тип:\t\tТранзистор\n";
     cout << "Назва:\t\t" << name << "\n";
@@ -14,4 +15,5 @@ void Transistor::showInfo() {
     cout << "Напруга:\t" << voltage << " В\n";
     cout << "Струм:\t\t" << current << " А\n";
     cout << "Підсилення:\t" << gain << "\n";
+    cout << RESET_COMPONENT_COLOR;
 }

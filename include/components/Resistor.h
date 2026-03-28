@@ -12,7 +12,9 @@ private:
 public:
     Resistor(int id, string name, double res, double pwr);
     double getResistance() const { return resistance; }
+    void setResistance(double res) { this->resistance = res; }
     double getPower() const { return power; }
+    void setPower(double pow) { this->power = pow; }
     void showInfo() override;
 };
 

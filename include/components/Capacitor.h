@@ -12,7 +12,9 @@ private:
 public:
     Capacitor(int id, string name, double volt, double cap);
     double getVoltage() const { return voltage; }
+    void setVoltage(double volt) { this->voltage = volt; }
     double getCapacity() const { return capacity; }
+    void setCapacity(double cap) { this->capacity = cap; }
     void showInfo() override;
 };
 

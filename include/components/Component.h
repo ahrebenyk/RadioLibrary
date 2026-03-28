@@ -3,6 +3,9 @@
 #include <string>
 using namespace std;
 
+const string COMPONENT_COLOR = "\033[37m";
+const string RESET_COMPONENT_COLOR = "\033[0m";
+
 enum class ComponentType { Resistor, Diode, Transistor, Capacitor };
 
 class Component {
@@ -14,6 +17,7 @@ public:
     Component(int id, string name, ComponentType type);
     ComponentType getType() const { return type; };
     string getName() const { return name; };
+    void setName(const string& newName) { this->name = newName;}
     int getId() const { return id; };
     virtual ~Component() = default;
     virtual void showInfo() = 0;

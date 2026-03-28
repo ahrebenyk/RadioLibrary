@@ -82,14 +82,14 @@
     "id": 402,
     "type": "Capacitor",
     "name": "Ceramic 100nF",
-    "capacity": 0.0000001,
+    "capacity": 0.01,
     "voltage": 50.0
   },
   {
     "id": 403,
     "type": "Capacitor",
     "name": "Tantalum 10uF",
-    "capacity": 0.00001,
+    "capacity": 0.003,
     "voltage": 16.0
   }
 ]

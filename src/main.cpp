@@ -6,6 +6,8 @@
 
 int main()
 {
+    std::cout << std::setprecision(10) << std::defaultfloat;
+    SetConsoleCP(CP_UTF8);
     SetConsoleOutputCP(CP_UTF8);
     DataService ds("data/components.json");
     ds.load();

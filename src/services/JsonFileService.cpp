@@ -18,7 +18,7 @@ vector<unique_ptr<Component>> JsonFileService::loadFromFile(const string& filena
             if (comp) components.push_back(std::move(comp));
         }
     } catch (const json::parse_error& e) {
-        std::cerr << "JSON Error: " << e.what() << std::endl;
+        std::cerr << "JSON Error: " << e.what() << endl;
     }
 
     return components;
@@ -77,7 +77,7 @@ unique_ptr<Transistor> JsonFileService::parseTransistor(const json& j) {
         j.at("polarity").get<string>(),
         j.at("voltage").get<double>(),
         j.at("current").get<double>(),
-        j.at("gain").get<int>()
+        j.at("gain").get<double>()
     );
 }
 
@@ -116,7 +116,7 @@ void JsonFileService::saveToFile(const std::string& filename, const std::vector<
 
     std::ofstream file(filename);
     if (file.is_open()) {
-        file << jArray.dump(4);
+        file << jArray.dump(4, ' ', false, nlohmann::json::error_handler_t::replace);;
         file.close();
     }
 }

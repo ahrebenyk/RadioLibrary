@@ -12,6 +12,7 @@ UserInterface::UserInterface(DataService& dataService) : ds(dataService) {
 }
 
 void UserInterface::showMainMenu() {
+    string infoMessage;
     while (true) {
         clearScreen();
         printMenuItem("------------- ГОЛОВНЕ МЕНЮ -------------");
@@ -20,14 +21,17 @@ void UserInterface::showMainMenu() {
         printMenuItem("3. Пошук за ID");
         printMenuItem("4. Пошук за назвою");
         printMenuItem("5. Додати компонент");
-        printMenuItem("6. Видалити компонент");
+        printMenuItem("6. Редагувати компонент");
+        printMenuItem("7. Видалити компонент");
         printMenuItem("0. Вихід");
         printMenuLine();
-        printMenuItem("Натисніть відповідну клавішу для вибору");
+        printInfoItem("Натисніть відповідну клавішу для вибору");
+        if (!infoMessage.empty()) {
+            printInfoItem(infoMessage);
+            infoMessage = "";
+        }
 
-        char choice = _getch();
-
-        switch (choice) {
+        switch (_getch()) {
         case '1':
             clearScreen();
             printAllComponents();
@@ -46,13 +50,15 @@ void UserInterface::showMainMenu() {
             addComponentMenu();
             break;
         case '6':
+            editComponentMenu();
+            break;
+        case '7':
             deleteByIdMenu();
             break;
         case '0':
             return;
         default:
-            printMenuItem("Невірний пункт меню");
-            awaitKey();
+            infoMessage = "Невірний пункт меню, натисніть цифру для вибору";
         }
     }
 }
@@ -72,12 +78,12 @@ void UserInterface::getByIdMenu() {
     Component* result = ds.getById(searchId);
 
     if (result) {
-        printMenuItem("\nЗнайдено компонент:");
+        printInfoItem("\nЗнайдено компонент:");
         printMenuLine();
         result->showInfo();
         printMenuLine();
     } else {
-        printMenuItem(format("\nКомпонент з ID {} не знайдено", searchId));
+        printErrorItem(format("\nКомпонент з ID {} не знайдено", searchId));
     }
     awaitKey();
 }
@@ -89,20 +95,20 @@ void UserInterface::deleteByIdMenu() {
     Component* result = ds.getById(id);
 
     if (result) {
-        printMenuItem("Знайдено компонент:");
+        printInfoItem("Знайдено компонент:");
         printMenuLine();
         result->showInfo();
         printMenuLine();
-        bool confirm = readBool("Ви впевнені що хочете видалити цей компонент?");
+        bool confirm = readConfirm("Ви впевнені що хочете видалити цей компонент?");
         if (confirm) {
             if (ds.deleteById(id)) {
-                printMenuItem("Компонент видалено");
+                printInfoItem("Компонент видалено");
             }
         } else {
-            printMenuItem("Видалення скасовано");;
+            printInfoItem("Видалення скасовано");;
         }
     } else {
-        printMenuItem(format("\nКомпонент з ID {} не знайдено", id));
+        printErrorItem(format("\nКомпонент з ID {} не знайдено", id));
     }
     awaitKey();
 }
@@ -110,20 +116,22 @@ void UserInterface::deleteByIdMenu() {
 void UserInterface::searchByNameMenu() {
     clearScreen();
     string namePart;
-    printMenuItem("Введіть частину назви компонента:");
+    printInfoItem("Введіть частину назви компонента:");
     getline(cin >> std::ws, namePart);
     vector<Component*> results = ds.searchByName(namePart);
+    printInfoItem(format("\nЗнайдено компонентів за назвою '{}' : {}", namePart, results.size()));
     printComponents(results);
     awaitKey();
 }
 
 void UserInterface::addComponentMenu() {
     clearScreen();
-    printMenuItem("------ ДОДАВАННЯ НОВОГО КОМПОНЕНТУ -----");
+    printMenuItem("------ Додавання нового компонента -----");
+    printLine("");
 
     auto compType = readComponentType();
     clearScreen();
-    printMenuItem("------ ДОДАВАННЯ НОВОГО КОМПОНЕНТУ -----");
+    printMenuItem("------ Додавання нового компонента -----");
     printMenuItem("Тип компонента: ");
     printLine(componentTypeToUkString(compType));
 
@@ -133,33 +141,33 @@ void UserInterface::addComponentMenu() {
     unique_ptr<Component> newComp = nullptr;
 
     if (compType == ComponentType::Resistor) {
-        double res = readDouble("Опір (Ом): ");
-        double pwr = readDouble("Потужність (Вт): ");
+        double res = readDouble("Введіть опір (Ом): ");
+        double pwr = readDouble("Введіть потужність (Вт): ");
         newComp = make_unique<Resistor>(id, compName, res, pwr);
     } else if (compType == ComponentType::Diode) {
-        double curr = readDouble("Струм (А): ");
-        double volt = readDouble("Напруга (В): ");
-        string material = readString("Матеріал: ");
+        double volt = readDouble("Введіть напругу (В): ");
+        double curr = readDouble("Введіть струм (А): ");
+        string material = readString("Введіть матеріал: ");
         newComp = make_unique<Diode>(id, compName, curr, volt, material);
     } else if (compType == ComponentType::Transistor) {
-        string polarity = readString("Полярність (NPN/PNP): ");
-        double volt = readDouble("Напруга (В): ");
-        double curr = readDouble("Струм (А): ");
-        double gain = readDouble("Підсилення: ");
+        string polarity = readString("Введіть полярність (NPN/PNP): ");
+        double volt = readDouble("Введіть напругу (В): ");
+        double curr = readDouble("Введіть струм (А): ");
+        double gain = readDouble("Введіть підсилення: ");
         newComp = make_unique<Transistor>(id, compName, polarity, volt, curr, gain);
     } else {
-        double volt = readDouble("Напруга (В): ");
-        double capacity = readDouble("Ємність (мФ): ");
+        double volt = readDouble("Введіть напругу (В): ");
+        double capacity = readDouble("Введіть ємність (мФ): ");
         newComp = make_unique<Capacitor>(id, compName, volt, capacity);
     }
 
     if (newComp) {
         printMenuLine();
-        printMenuItem("Деталі компонента:");
+        printInfoItem("Деталі компонента:");
         printMenuLine();
         newComp->showInfo();
         printMenuLine();
-        auto confirm = readBool("Підтвердіть додавання");
+        auto confirm = readConfirm("Підтвердіть додавання");
         if (confirm) {
             ds.add(std::move(newComp));
             printMenuItem("Компонент успішно додано");
@@ -170,18 +178,260 @@ void UserInterface::addComponentMenu() {
     awaitKey();
 }
 
+void UserInterface::editComponentMenu() {
+    clearScreen();
+    int id = readInt("Введіть ID компонента для редагування:");
+    Component* comp = ds.getById(id);
+
+    if (!comp) {
+        printErrorItem(format("\nКомпонент з ID {} не знайдено", id));
+        return;
+    }
+
+    if (comp->getType() == ComponentType::Resistor) {
+        editResistorMenu(comp);
+    } else if (comp->getType() == ComponentType::Diode) {
+        editDiodeMenu(comp);
+    } else if (comp->getType() == ComponentType::Transistor) {
+        editTransistorMenu(comp);
+    } else if (comp->getType() == ComponentType::Capacitor) {
+        editCapacitorMenu(comp);
+    }
+}
+
+void UserInterface::editResistorMenu(Component* component) {
+    auto* resistor = dynamic_cast<Resistor*>(component);
+
+    clearScreen();
+    string infoMessage;
+
+    bool editing = true;
+    while (editing) {
+        clearScreen();
+        printMenuItem("--------- Редагування резистора --------");
+        printMenuLine();
+        resistor->showInfo();
+        printMenuLine();
+        printMenuItem("1. Змінити назву");
+        printMenuItem("2. Змінити опір");
+        printMenuItem("3. Змінити потужність");
+        printMenuItem("0. Повернутися");
+        printMenuLine();
+
+        if (!infoMessage.empty()) {
+            printInfoItem(infoMessage);
+            infoMessage = "";
+        }
+
+        switch (_getch()) {
+            case '1': {
+                resistor->setName(readString("Нова назва: "));
+                infoMessage = "Назву змінено";
+                break;
+            }
+            case '2': {
+                resistor->setResistance(readDouble("Введіть нове значення опору (Ом): "));
+                infoMessage = "Значення опору змінено";
+                break;
+            }
+            case '3': {
+                resistor->setPower(readDouble("Введіть нове значення потужності (Вт): "));
+                infoMessage = "Значення потужності змінено";
+                break;
+            }
+            case '0':
+                editing = false;
+                break;
+            default:
+                infoMessage = "Невірний пункт меню, натисніть цифру для вибору";
+        }
+    }
+    ds.save();
+}
+
+void UserInterface::editDiodeMenu(Component* component) {
+    auto* diode = dynamic_cast<Diode*>(component);
+
+    clearScreen();
+    string infoMessage;
+
+    bool editing = true;
+    while (editing) {
+        clearScreen();
+        printMenuItem("----------- Редагування діода ----------");
+        printMenuLine();
+        diode->showInfo();
+        printMenuLine();
+        printMenuItem("1. Змінити назву");
+        printMenuItem("2. Змінити струм");
+        printMenuItem("3. Змінити напругу");
+        printMenuItem("4. Змінити матеріал");
+        printMenuItem("0. Повернутися");
+        printMenuLine();
+
+        if (!infoMessage.empty()) {
+            printInfoItem(infoMessage);
+            infoMessage = "";
+        }
+
+        switch (_getch()) {
+            case '1': {
+                diode->setName(readString("Нова назва: "));
+                infoMessage = "Назву змінено";
+                break;
+            }
+            case '2': {
+                diode->setCurrent(readDouble("Введіть нове значення струму (А): "));
+                infoMessage = "Значення струму змінено";
+                break;
+            }
+            case '3': {
+                diode->setVoltage(readDouble("Введіть нове значення напруги (В): "));
+                infoMessage = "Значення напруги змінено";
+                break;
+            }
+            case '4': {
+                diode->setMaterial(readString("Введіть нове значення матеріалу: "));
+                infoMessage = "Значення матеріалу змінено";
+                break;
+            }
+            case '0':
+                editing = false;
+                break;
+            default:
+                infoMessage = "Невірний пункт меню, натисніть цифру для вибору";
+        }
+    }
+
+    ds.save();
+}
+
+void UserInterface::editTransistorMenu(Component* component) {
+    auto* diode = dynamic_cast<Transistor*>(component);
+
+    clearScreen();
+    string infoMessage;
+
+    bool editing = true;
+    while (editing) {
+        clearScreen();
+        printMenuItem("-------- Редагування транзистора -------");
+        printMenuLine();
+        diode->showInfo();
+        printMenuLine();
+        printMenuItem("1. Змінити назву");
+        printMenuItem("2. Змінити провідність");
+        printMenuItem("3. Змінити напругу");
+        printMenuItem("4. Змінити струм");
+        printMenuItem("5. Змінити підсилення");
+        printMenuItem("0. Повернутися");
+        printMenuLine();
+
+        if (!infoMessage.empty()) {
+            printInfoItem(infoMessage);
+            infoMessage = "";
+        }
+
+        switch (_getch()) {
+            case '1': {
+                diode->setName(readString("Нова назва: "));
+                infoMessage = "Назву змінено";
+                break;
+            }
+            case '2': {
+                diode->setPolarity(readString("Введіть нове значення провідності (А): "));
+                infoMessage = "Значення провідності змінено";
+                break;
+            }
+            case '3': {
+                diode->setVoltage(readDouble("Введіть нове значення напруги (В): "));
+                infoMessage = "Значення напруги змінено";
+                break;
+            }
+            case '4': {
+                diode->setCurrent(readDouble("Введіть нове значення струму: "));
+                infoMessage = "Значення струму змінено";
+                break;
+            }
+            case '5': {
+                diode->setGain(readDouble("Введіть нове значення підсилення: "));
+                infoMessage = "Значення підсилення змінено";
+                break;
+            }
+            case '0':
+                editing = false;
+                break;
+            default:
+                infoMessage = "Невірний пункт меню, натисніть цифру для вибору";
+        }
+    }
+
+    ds.save();
+}
+
+void UserInterface::editCapacitorMenu(Component* component) {
+    auto* diode = dynamic_cast<Capacitor*>(component);
+
+    clearScreen();
+    string infoMessage;
+    bool editing = true;
+    while (editing) {
+        clearScreen();
+        printMenuItem("------- Редагування конденсатора -------");
+        printMenuLine();
+        diode->showInfo();
+        printMenuLine();
+        printMenuItem("1. Змінити назву");
+        printMenuItem("2. Змінити напругу");
+        printMenuItem("3. Змінити ємність");
+        printMenuItem("0. Повернутися");
+        printMenuLine();
+
+        if (!infoMessage.empty()) {
+            printInfoItem(infoMessage);
+            infoMessage = "";
+        }
+
+        switch (_getch()) {
+            case '1': {
+                diode->setName(readString("Нова назва: "));
+                infoMessage = "Назву змінено";
+                break;
+            }
+            case '2': {
+                diode->setVoltage(readDouble("Введіть нове значення напруги (А): "));
+                infoMessage = "Значення напруги змінено";
+                break;
+            }
+            case '3': {
+                diode->setCapacity(readDouble("Введіть нове значення ємності (мФ): "));
+                infoMessage = "Значення ємності змінено";
+                break;
+            }
+            case '0':
+                editing = false;
+                break;
+            default:
+                infoMessage = "Невірний пункт меню, натисніть цифру для вибору";
+        }
+    }
+
+    ds.save();
+}
+
 void UserInterface::printAllComponents() {
     auto results = ds.getAll();
+    printInfoItem(format("\nЗнайдено компонентів: {}", results.size()));
     printComponents(results);
 }
 
 void UserInterface::printComponentsByType(ComponentType type) {
     auto results = ds.searchByType(type);
+    printInfoItem(format("\nЗнайдено компонентів за типом '{}' : {}", componentTypeToUkString(type), results.size()));
     printComponents(results);
 }
 
 void UserInterface::printComponents(const std::vector<Component*>& components) {
-    printMenuItem(format("\nЗнайдено компонентів: {} \n", components.size()));
     printMenuLine();
     for (auto* comp : components) {
         comp->showInfo();
@@ -192,26 +442,30 @@ void UserInterface::printComponents(const std::vector<Component*>& components) {
 int UserInterface::readInt(const string& prompt) {
     int value;
     while (true) {
-        printMenuItem(prompt);
+        printInfoItem(prompt);
         if (cin >> value) {
             clearInput();
             return value;
         }
-        printMenuItem("Помилка: невірний формат числа (напр. 10)");
+        printErrorItem("Помилка: невірний формат числа (напр. 10)");
         clearInput();
     }
 }
 
 ComponentType UserInterface::readComponentType() {
-    printMenuItem("------- ВИБЕРІТЬ ТИП КОМПОНЕНТА -------");
-    printMenuItem("1. Резистор");
-    printMenuItem("2. Діод");
-    printMenuItem("3. Транзистор");
-    printMenuItem("4. Конденсатор");
-    printMenuLine();
-    printMenuItem("Натисніть відповідну клавішу для вибору");
-
+    string errorMessage;
     while (true) {
+        clearScreen();
+        printMenuItem("------- Виберіть тип компонента -------");
+        printMenuItem("1. Резистор");
+        printMenuItem("2. Діод");
+        printMenuItem("3. Транзистор");
+        printMenuItem("4. Конденсатор");
+        printMenuLine();
+        printInfoItem("Натисніть відповідну клавішу для вибору");
+        if (!errorMessage.empty()) {
+            printErrorItem(errorMessage);
+        }
         char choice = _getch();
         switch (choice) {
         case '1':
@@ -223,7 +477,7 @@ ComponentType UserInterface::readComponentType() {
         case '4':
             return ComponentType::Capacitor;
         default:
-            printMenuItem("Невірний тип, натисніть 1, 2, 3 або 4 для вибору типу");
+            errorMessage = "Невірний пункт меню, натисніть цифру для вибору";
         }
     }
 }
@@ -231,13 +485,13 @@ ComponentType UserInterface::readComponentType() {
 double UserInterface::readDouble(const string& prompt) {
     string input;
     while (true) {
-        printMenuItem(prompt);
+        printInfoItem(prompt);
         cin >> input;
         replace(input.begin(), input.end(), ',', '.');
         try {
             return stod(input);
         } catch (...) {
-            printMenuItem("Помилка: невірний формат числа (напр. 12.1)");
+            printErrorItem("Помилка: невірний формат числа (напр. 12.1)");
         }
     }
 }
@@ -245,23 +499,23 @@ double UserInterface::readDouble(const string& prompt) {
 string UserInterface::readString(const string& prompt) {
     string input;
     while (true) {
-        printMenuItem(prompt);
+        printInfoItem(prompt);
         if (getline(cin >> std::ws, input)) {
             if (!input.empty() && input.find_first_not_of(" \t\n\v\f\r") != string::npos) {
                 return input;
             }
         }
-        printMenuItem("Помилка: поле не може бути порожнім!");
+        printErrorItem("Помилка: поле не може бути порожнім!");
         if (cin.fail()) {
             clearInput();
         }
     }
 }
 
-bool UserInterface::readBool(const std::string& prompt) {
+bool UserInterface::readConfirm(const string& prompt) {
     char ch;
     while (true) {
-        printMenuItem(prompt + " (y/n):");
+        printInfoItem(prompt + " (y/n):");
         ch = _getch();
         char lowerCh = tolower(ch);
         if (lowerCh == 'y') {
@@ -284,7 +538,15 @@ void UserInterface::printMenuLine() {
 }
 
 void UserInterface::printMenuItem(const string& item) {
-    cout << MENU_COLOR << item << RESET << endl;
+    cout << MENU_COLOR << item << RESET_COLOR << endl;
+}
+
+void UserInterface::printErrorItem(const string& item) {
+    cout << ERROR_COLOR << item << RESET_COLOR << endl;
+}
+
+void UserInterface::printInfoItem(const string& item) {
+    cout << INFO_COLOR << item << RESET_COLOR << endl;
 }
 
 void UserInterface::printLine(const string& item) {
@@ -296,6 +558,6 @@ void UserInterface::clearScreen() {
 }
 
 void UserInterface::awaitKey() {
-    printMenuItem("\nНатисніть будь-яку клавішу, щоб повернутися...");
+    printInfoItem("\nНатисніть будь-яку клавішу, щоб повернутися...");
     _getch();
 }

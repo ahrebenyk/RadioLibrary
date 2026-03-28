@@ -21,7 +21,6 @@ public:
     Component* getById(int targetId);
     vector<Component*> searchByType(ComponentType type);
     void save();
-    void add(Component* c);
     vector<Component*> getAll();
     vector<Component*> searchByName(const string& namePart);
     bool deleteById(int id);

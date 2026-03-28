@@ -85,7 +85,15 @@ bool DataService::deleteById(int id) {
 void DataService::add(unique_ptr<Component> component) {
     if (component != nullptr) {
         database.push_back(std::move(component));
+        save();
+    }
+}
+
+void DataService::save() {
+    try {
         JsonFileService::saveToFile(this->filename, database);
+    } catch (const exception& e) {
+        cout << "Помилка під час збереження даних: " << e.what() << endl;
     }
 }
 
