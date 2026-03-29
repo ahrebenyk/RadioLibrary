@@ -13,8 +13,8 @@ private:
     double gain;
 
 public:
-    Transistor(int id, string name, string polarity, double voltage, double current, int gain);
-    void showInfo() override;
+    Transistor(int id, const string& name, const string& polarity, double voltage, double current, double gain);
+    void showInfo() const override;
     string getPolarity() const { return polarity; }
     void setPolarity(const string& pol) { this->polarity = pol;}
     double getVoltage() const { return voltage; }

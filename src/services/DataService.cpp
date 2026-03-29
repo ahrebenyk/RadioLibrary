@@ -5,7 +5,7 @@
 
 using namespace std;
 
-DataService::DataService(string dbFile, shared_ptr<User> user) : filename(dbFile), currentUser(user){
+DataService::DataService(const string& dbFile, shared_ptr<User> user) : filename(dbFile), currentUser(user) {
 }
 
 void DataService::clear() {
@@ -19,8 +19,8 @@ void DataService::load() {
     }
 }
 
-vector<Component*> DataService::getAll() {
-    vector<Component*> all;
+vector<const Component*> DataService::getAll() const {
+    vector<const Component*> all;
     all.reserve(database.size());
 
     for (const auto& item : database) {
@@ -30,7 +30,7 @@ vector<Component*> DataService::getAll() {
     return all;
 }
 
-Component* DataService::getById(int targetId) {
+const Component* DataService::getById(int targetId) const {
     for (const auto& item : database) {
         if (item->getId() == targetId) {
             return item.get();
@@ -39,8 +39,17 @@ Component* DataService::getById(int targetId) {
     return nullptr;
 }
 
-vector<Component*> DataService::searchByType(const ComponentType type) {
-    std::vector<Component*> results;
+Component* DataService::getByIdInternal(int targetId) const {
+    for (auto& item : database) {
+        if (item->getId() == targetId) {
+            return item.get();
+        }
+    }
+    return nullptr;
+}
+
+vector<const Component*> DataService::searchByType(const ComponentType type) const {
+    std::vector<const Component*> results;
     for (const auto& item : database) {
         if (item->getType() == type) {
             results.push_back(item.get());
@@ -49,8 +58,8 @@ vector<Component*> DataService::searchByType(const ComponentType type) {
     return results;
 }
 
-vector<Component*> DataService::searchByName(const string& namePart) {
-    vector<Component*> results;
+vector<const Component*> DataService::searchByName(const string& namePart) const {
+    vector<const Component*> results;
 
     string query = namePart;
     ranges::transform(query, query.begin(), ::tolower);
@@ -83,6 +92,113 @@ bool DataService::deleteById(int id) {
     return false;
 }
 
+void DataService::updateResistor(int id, optional<string> name, optional<double> resistance, optional<double> power) {
+    checkAdminAccess();
+    Component* comp = getByIdInternal(id);
+    if (!comp) {
+        printEditError();
+        return;
+    }
+    auto* resistor = dynamic_cast<Resistor*>(comp);
+    if (!resistor) {
+        printEditError();
+        return;
+    }
+    if (name.has_value()) {
+        resistor->setName(name.value());
+    }
+    if (resistance.has_value()) {
+        resistor->setResistance(resistance.value());
+    }
+    if (power.has_value()) {
+        resistor->setPower(power.value());
+    }
+    save();
+}
+
+void DataService::updateDiode(int id, optional<string> name, optional<double> current,
+                              optional<double> voltage, optional<string> material) {
+    checkAdminAccess();
+    Component* comp = getByIdInternal(id);
+    if (!comp) {
+        printEditError();
+        return;
+    }
+    auto* diode = dynamic_cast<Diode*>(comp);
+    if (!diode) {
+        printEditError();
+        return;
+    }
+    if (name.has_value()) {
+        diode->setName(name.value());
+    }
+    if (current.has_value()) {
+        diode->setCurrent(current.value());
+    }
+    if (voltage.has_value()) {
+        diode->setVoltage(voltage.value());
+    }
+    if (material.has_value()) {
+        diode->setMaterial(material.value());
+    }
+    save();
+}
+
+void DataService::updateTransistor(int id, optional<string> name, optional<string> polatiry, optional<double> voltage,
+                                   optional<double> current, optional<double> gain) {
+    checkAdminAccess();
+    Component* comp = getByIdInternal(id);
+    if (!comp) {
+        printEditError();
+        return;
+    }
+    auto* transistor = dynamic_cast<Transistor*>(comp);
+    if (!transistor) {
+        printEditError();
+        return;
+    }
+    if (name.has_value()) {
+        transistor->setName(name.value());
+    }
+    if (polatiry.has_value()) {
+        transistor->setPolarity(polatiry.value());
+    }
+    if (voltage.has_value()) {
+        transistor->setVoltage(voltage.value());
+    }
+    if (current.has_value()) {
+        transistor->setCurrent(current.value());
+    }
+    if (gain.has_value()) {
+        transistor->setGain(gain.value());
+    }
+    save();
+}
+
+void DataService::updateCapacitor(int id, optional<string> name, optional<double> voltage, optional<double> capacity) {
+    checkAdminAccess();
+    Component* comp = getByIdInternal(id);
+    if (!comp) {
+        printEditError();
+        return;
+    }
+    auto* capacitor = dynamic_cast<Capacitor*>(comp);
+    if (!capacitor) {
+        printEditError();
+        return;
+    }
+    if (name.has_value()) {
+        capacitor->setName(name.value());
+    }
+    if (voltage.has_value()) {
+        capacitor->setVoltage(voltage.value());
+    }
+    if (capacity.has_value()) {
+        capacitor->setCapacity(capacity.value());
+    }
+    save();
+}
+
 void DataService::add(unique_ptr<Component> component) {
     checkAdminAccess();
     if (component != nullptr) {
@@ -108,8 +224,14 @@ int DataService::getNextId() const {
     return database.back()->getId() + 1;
 }
 
-void DataService::checkAdminAccess() {
+void DataService::checkAdminAccess() const {
     if (!currentUser->isAdmin()) {
         throw std::runtime_error("Відмовлено в доступі!");
     }
+}
+
+void DataService::printEditError() {
+    cout << DATASERVICE_ERROR_COLOR;
+    cout << "Помилка редагування компонента\n";
+    cout << DATASERVICE_RESET_COLOR;
 }

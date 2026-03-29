@@ -3,10 +3,10 @@
 
 using namespace std;
 
-Diode::Diode(int id, std::string name, double current, double voltage, string mat)
+Diode::Diode(int id, const string& name, double current, double voltage, const string& mat)
     : Component(id, name, ComponentType::Diode), current(current), voltage(voltage), material(mat) {}
 
-void Diode::showInfo() {
+void Diode::showInfo() const {
     cout << COMPONENT_COLOR;
     cout << "ID:\t\t" << id << "\n";
     cout << "Тип:\t\tДіод\n";

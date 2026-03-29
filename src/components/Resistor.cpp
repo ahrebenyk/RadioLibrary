@@ -3,10 +3,10 @@
 
 using namespace std;
 
-Resistor::Resistor(int id, string name, double res, double pwr)
+Resistor::Resistor(int id, const string& name, double res, double pwr)
     : Component(id, name, ComponentType::Resistor), resistance(res), power(pwr) {}
 
-void Resistor::showInfo() {
+void Resistor::showInfo() const {
     cout << COMPONENT_COLOR;
     cout << "ID:\t\t" << id << "\n";
     cout << "Тип:\t\tРезистор\n";

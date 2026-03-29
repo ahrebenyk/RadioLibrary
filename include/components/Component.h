@@ -14,13 +14,13 @@ protected:
     string name;
     ComponentType type;
 public:
-    Component(int id, string name, ComponentType type);
+    Component(int id, const string& name, ComponentType type);
     ComponentType getType() const { return type; };
     string getName() const { return name; };
     void setName(const string& newName) { this->name = newName;}
     int getId() const { return id; };
     virtual ~Component() = default;
-    virtual void showInfo() = 0;
+    virtual void showInfo() const = 0;
 };
 
 inline string componentTypeToString(ComponentType type) {

@@ -81,7 +81,7 @@ unique_ptr<Transistor> JsonFileService::parseTransistor(const json& j) {
     );
 }
 
-void JsonFileService::saveToFile(const std::string& filename, const std::vector<std::unique_ptr<Component>>& database) {
+void JsonFileService::saveToFile(const string& filename, const vector<unique_ptr<Component>>& database) {
     nlohmann::json jArray = nlohmann::json::array();
 
     for (const auto& item : database) {

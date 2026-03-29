@@ -3,10 +3,10 @@
 
 using namespace std;
 
-Transistor::Transistor(int id, string name, string polarity, double voltage, double current, int gain)
+Transistor::Transistor(int id, const string& name, const string& polarity, double voltage, double current, double gain)
     : Component(id, name, ComponentType::Transistor), polarity(polarity), voltage(voltage), current(current), gain(gain) {}
 
-void Transistor::showInfo() {
+void Transistor::showInfo() const {
     cout << COMPONENT_COLOR;
     cout << "ID:\t\t" << id << "\n";
     cout << "Тип:\t\tТранзистор\n";

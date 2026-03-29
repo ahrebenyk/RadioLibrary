@@ -4,10 +4,10 @@
 
 using namespace std;
 
-Capacitor::Capacitor(int id, string name, double volt, double cap)
+Capacitor::Capacitor(int id, const string& name, double volt, double cap)
     : Component(id, name, ComponentType::Capacitor), voltage(volt), capacity(cap) {}
 
-void Capacitor::showInfo() {
+void Capacitor::showInfo() const {
     cout << COMPONENT_COLOR;
     cout << "ID:\t\t" << id << "\n";
     cout << "Тип:\t\tКонденсатор\n";

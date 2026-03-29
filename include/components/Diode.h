@@ -10,14 +10,14 @@ private:
     double voltage;
     string material;
 public:
-    Diode(int id, string name, double current, double voltage, string mat);
+    Diode(int id, const string& name, double current, double voltage, const string& mat);
     double getCurrent() const { return current; }
     void setCurrent(double curr) { this->current = curr; }
     double getVoltage() const { return voltage; }
     void setVoltage(double volt) { this->voltage = volt; }
     string getMaterial() const { return material; }
     void setMaterial(const string& mat) { this->material = mat; }
-    void showInfo() override;
+    void showInfo() const override;
 };
 
 #endif

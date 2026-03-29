@@ -10,12 +10,12 @@ private:
     double resistance;
     double power;
 public:
-    Resistor(int id, string name, double res, double pwr);
+    Resistor(int id, const string& name, double res, double pwr);
     double getResistance() const { return resistance; }
     void setResistance(double res) { this->resistance = res; }
     double getPower() const { return power; }
     void setPower(double pow) { this->power = pow; }
-    void showInfo() override;
+    void showInfo() const override;
 };
 
 #endif

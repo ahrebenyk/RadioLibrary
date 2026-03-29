@@ -4,7 +4,7 @@
 #include "DataService.h"
 #include "users/User.h"
 
-const string MENU_COLOR = "\033[34m";
+const string MENU_COLOR = "\033[32m";
 const string ERROR_COLOR = "\033[31m";
 const string INFO_COLOR = "\033[90m";
 const string RESET_COLOR = "\033[0m";
@@ -21,19 +21,19 @@ private:
     void searchByNameMenu();
     void addComponentMenu();
     void editComponentMenu();
-    void editResistorMenu(Component* component);
-    void editDiodeMenu(Component* component);
-    void editTransistorMenu(Component* component);
-    void editCapacitorMenu(Component* component);
+    void editResistorMenu(const Component* component);
+    void editDiodeMenu(const Component* component);
+    void editTransistorMenu(const Component* component);
+    void editCapacitorMenu(const Component* component);
     void printAllComponents();
     void printComponentsByType(ComponentType type);
-    static void printComponents(const vector<Component*>& components);
-    static char getSelectedOption(const std::vector<char>& allowedChars);
+    static void printComponents(const vector<const Component*>& components);
+    static char getSelectedOption(const vector<char>& allowedChars);
     static int readInt(const string& prompt);
     static double readDouble(const string& input);
     static string readString(const string& prompt);
     static ComponentType readComponentType();
-    static bool readConfirm(const std::string& prompt);
+    static bool readConfirm(const string& prompt);
     static void clearScreen();
     static void awaitKey();
     static void clearInput();
@@ -44,7 +44,7 @@ private:
     static void showError(const string& item);
     static void showInfoMessage(const string& message);
     static void showTemporaryMessage(const string& message);
-    void printLine(const string& item);
+    static void printLine(const string& item);
 
 public:
     UserInterface(DataService& dataService, shared_ptr<User> user);
