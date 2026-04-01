@@ -40,7 +40,8 @@ void UserInterface::selectUserMenu() {
 }
 
 void UserInterface::showMainMenu() {
-    while (true) {
+    bool isRunning = true;
+    while (isRunning) {
         clearScreen();
         printMenuItem("------------- ГОЛОВНЕ МЕНЮ -------------");
         printMenuItem("1. Показати всі компоненти");
@@ -58,38 +59,45 @@ void UserInterface::showMainMenu() {
 
         vector<char> allowedOptions = currentUser->isAdmin() ? ADMIN_OPTIONS : GUEST_OPTIONS;
 
-        switch (getSelectedOption(allowedOptions)) {
-        case '1':
-            clearScreen();
-            printAllComponents();
+        try {
+            switch (getSelectedOption(allowedOptions)) {
+            case '1':
+                clearScreen();
+                printAllComponents();
+                awaitKey();
+                break;
+            case '2':
+                searchByTypeMenu();
+                break;
+            case '3':
+                getByIdMenu();
+                break;
+            case '4':
+                searchByNameMenu();
+                break;
+            case '5':
+                addComponentMenu();
+                break;
+            case '6':
+                editComponentMenu();
+                break;
+            case '7':
+                deleteByIdMenu();
+                break;
+            case '0':
+                selectUserMenu();
+                break;
+            case 27:
+            case 'q':
+            case 'Q':
+                isRunning = false;
+                break;
+            default:
+                showError("Невірний пункт меню, натисніть цифру для вибору");
+            }
+        } catch (const std::exception& e) {
+            printErrorItem(format("Помилка: {}", e.what()));
             awaitKey();
-            break;
-        case '2':
-            searchByTypeMenu();
-            break;
-        case '3':
-            getByIdMenu();
-            break;
-        case '4':
-            searchByNameMenu();
-            break;
-        case '5':
-            addComponentMenu();
-            break;
-        case '6':
-            editComponentMenu();
-            break;
-        case '7':
-            deleteByIdMenu();
-            break;
-        case '0':
-            selectUserMenu();
-            break;
-        case 'q':
-        case 'Q':
-            return;
-        default:
-            showError("Невірний пункт меню, натисніть цифру для вибору");
         }
     }
 }
