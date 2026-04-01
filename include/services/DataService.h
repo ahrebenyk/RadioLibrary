@@ -21,6 +21,7 @@ private:
     string filename;
     Component* getByIdInternal(int targetId) const;
     void save();
+    void add(unique_ptr<Component> component);
 public:
     DataService(const string& dbFile, shared_ptr<User> user);
     ~DataService() = default;
@@ -36,9 +37,12 @@ public:
     void updateTransistor(int id, optional<string> name, optional<string> polatiry, optional<double> voltage,
                           optional<double> current, optional<double> gain);
     void updateCapacitor(int id, optional<string> name, optional<double> voltage, optional<double> capacity);
-    void add(unique_ptr<Component> component);
+    void addResistor(const string&, double res, double power);
     int getNextId() const;
     void checkAdminAccess() const;
+    void addDiode(const string& name, double volt, double curr, const string& mat);
+    void addTransistor(const string& name, const string& polarity, double volt, double curr, double gain);
+    void addCapacitor(const string& name, double volt, double capacity);
     static void printEditError();
     void clear();
 };

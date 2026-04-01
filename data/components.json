@@ -1,27 +1,27 @@
 [
   {
-    "id": 101,
+    "id": 1,
     "type": "Resistor",
     "name": "Metal Film 10k",
     "resistance": 10000.0,
     "power": 0.25
   },
   {
-    "id": 102,
+    "id": 2,
     "type": "Resistor",
     "name": "Power Resistor 1R",
     "resistance": 1.0,
     "power": 5.0
   },
   {
-    "id": 103,
+    "id": 3,
     "type": "Resistor",
     "name": "SMD 0805 4.7k",
     "resistance": 4700.0,
     "power": 0.125
   },
   {
-    "id": 201,
+    "id": 4,
     "type": "Diode",
     "name": "1N4148 Signal",
     "current": 0.3,
@@ -29,7 +29,7 @@
     "material": "Silicon"
   },
   {
-    "id": 202,
+    "id": 5,
     "type": "Diode",
     "name": "1N4007 Rectifier",
     "current": 1.0,
@@ -37,7 +37,7 @@
     "material": "Silicon"
   },
   {
-    "id": 203,
+    "id": 6,
     "type": "Diode",
     "name": "SR560 Schottky",
     "current": 5.0,
@@ -45,7 +45,7 @@
     "material": "Schottky"
   },
   {
-    "id": 301,
+    "id": 7,
     "type": "Transistor",
     "name": "BC547 NPN",
     "current": 0.1,
@@ -54,7 +54,7 @@
     "polarity": "NPN"
   },
   {
-    "id": 302,
+    "id": 8,
     "type": "Transistor",
     "current": 1.0,
     "name": "2N3055 Power",
@@ -63,7 +63,7 @@
     "polarity": "NPN"
   },
   {
-    "id": 303,
+    "id": 9,
     "type": "Transistor",
     "current": 10,
     "name": "IRFZ44N MOSFET",
@@ -72,21 +72,21 @@
     "polarity": "PNP"
   },
   {
-    "id": 401,
+    "id": 10,
     "type": "Capacitor",
     "name": "Electrolytic 1000uF",
     "capacity": 0.001,
     "voltage": 25.0
   },
   {
-    "id": 402,
+    "id": 11,
     "type": "Capacitor",
     "name": "Ceramic 100nF",
     "capacity": 0.01,
     "voltage": 50.0
   },
   {
-    "id": 403,
+    "id": 12,
     "type": "Capacitor",
     "name": "Tantalum 10uF",
     "capacity": 0.003,

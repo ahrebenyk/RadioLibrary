@@ -199,8 +199,31 @@ void DataService::updateCapacitor(int id, optional<string> name, optional<double
     save();
 }
 
-void DataService::add(unique_ptr<Component> component) {
+void DataService::addResistor(const string& name, double res, double power) {
     checkAdminAccess();
+    auto resistor = make_unique<Resistor>(getNextId(), name, res, power);
+    add(std::move(resistor));
+}
+
+void DataService::addDiode(const string& name, double volt, double curr, const string& mat) {
+    checkAdminAccess();
+    auto diode = make_unique<Diode>(getNextId(), name, volt, curr, mat);
+    add(std::move(diode));
+}
+
+void DataService::addTransistor(const string& name, const string& polarity, double volt, double curr, double gain) {
+    checkAdminAccess();
+    auto transistor = make_unique<Transistor>(getNextId(), name, polarity, volt, curr, gain);
+    add(std::move(transistor));
+}
+
+void DataService::addCapacitor(const string& name, double volt, double capacity) {
+    checkAdminAccess();
+    auto capacitor = make_unique<Capacitor>(getNextId(), name, volt, capacity);
+    add(std::move(capacitor));
+}
+
+void DataService::add(unique_ptr<Component> component) {
     if (component != nullptr) {
         database.push_back(std::move(component));
         save();

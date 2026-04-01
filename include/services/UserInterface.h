@@ -20,6 +20,11 @@ private:
     void deleteByIdMenu();
     void searchByNameMenu();
     void addComponentMenu();
+    void addResistorMenu();
+    void addDiodeMenu();
+    void addTransistorMenu();
+    void addCapacitorMenu();
+    static void addAfterConfirmation(const std::function<void()>& action);
     void editComponentMenu();
     void editResistorMenu(const Component* component);
     void editDiodeMenu(const Component* component);

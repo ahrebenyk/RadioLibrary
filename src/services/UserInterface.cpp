@@ -165,50 +165,67 @@ void UserInterface::addComponentMenu() {
     auto compType = readComponentType();
     clearScreen();
     printMenuItem("------ Додавання нового компонента -----");
-    printMenuItem("Тип компонента: ");
+    printInfoItem("Тип компонента: ");
     printLine(componentTypeToUkString(compType));
 
-    auto compName = readString("Введіть назву");
-
-    int id = ds.getNextId();
-    unique_ptr<Component> newComp = nullptr;
-
     if (compType == ComponentType::Resistor) {
-        double res = readDouble("Введіть опір (Ом): ");
-        double pwr = readDouble("Введіть потужність (Вт): ");
-        newComp = make_unique<Resistor>(id, compName, res, pwr);
+        addResistorMenu();
     } else if (compType == ComponentType::Diode) {
-        double volt = readDouble("Введіть напругу (В): ");
-        double curr = readDouble("Введіть струм (А): ");
-        string material = readString("Введіть матеріал: ");
-        newComp = make_unique<Diode>(id, compName, curr, volt, material);
+        addDiodeMenu();
     } else if (compType == ComponentType::Transistor) {
-        string polarity = readString("Введіть полярність (NPN/PNP): ");
-        double volt = readDouble("Введіть напругу (В): ");
-        double curr = readDouble("Введіть струм (А): ");
-        double gain = readDouble("Введіть підсилення: ");
-        newComp = make_unique<Transistor>(id, compName, polarity, volt, curr, gain);
-    } else {
-        double volt = readDouble("Введіть напругу (В): ");
-        double capacity = readDouble("Введіть ємність (мФ): ");
-        newComp = make_unique<Capacitor>(id, compName, volt, capacity);
-    }
-
-    if (newComp) {
-        printMenuLine();
-        printInfoItem("Деталі компонента:");
-        printMenuLine();
-        newComp->showInfo();
-        printMenuLine();
-        auto confirm = readConfirm("Підтвердіть додавання");
-        if (confirm) {
-            ds.add(std::move(newComp));
-            printMenuItem("Компонент успішно додано");
-        } else {
-            printMenuItem("Додавання скасовано");
-        }
+        addTransistorMenu();
+    } else if (compType == ComponentType::Capacitor) {
+        addCapacitorMenu();
     }
     awaitKey();
+}
+
+void UserInterface::addResistorMenu() {
+    auto name = readString("Введіть назву:");
+    double res = readDouble("Введіть опір (Ом):");
+    double pwr = readDouble("Введіть потужність (Вт):");
+    addAfterConfirmation([&] {
+        ds.addResistor(name, res, pwr);
+    });
+}
+
+void UserInterface::addDiodeMenu() {
+    auto name = readString("Введіть назву:");
+    double volt = readDouble("Введіть напругу (В): ");
+    double curr = readDouble("Введіть струм (А): ");
+    string material = readString("Введіть матеріал: ");
+    addAfterConfirmation([&] {
+        ds.addDiode(name, volt, curr, material);
+    });
+}
+
+void UserInterface::addTransistorMenu() {
+    auto name = readString("Введіть назву:");
+    string polarity = readString("Введіть полярність: ");
+    double volt = readDouble("Введіть напругу (В): ");
+    double curr = readDouble("Введіть струм (А): ");
+    double gain = readDouble("Введіть підсилення: ");
+    addAfterConfirmation([&] {
+        ds.addTransistor(name, polarity, volt, curr, gain);
+    });
+}
+
+void UserInterface::addCapacitorMenu() {
+    auto name = readString("Введіть назву:");
+    double volt = readDouble("Введіть напругу (В): ");
+    double capacity = readDouble("Введіть ємність (мФ): ");
+    addAfterConfirmation([&] {
+        ds.addCapacitor(name, volt, capacity);
+    });
+}
+
+void UserInterface::addAfterConfirmation(const function<void()>& action) {
+    if (readConfirm("Підтвердіть додавання компонента")) {
+        action();
+        printMenuItem("Компонент успішно додано");
+    } else {
+        printMenuItem("Додавання скасовано");
+    }
 }
 
 void UserInterface::editComponentMenu() {
