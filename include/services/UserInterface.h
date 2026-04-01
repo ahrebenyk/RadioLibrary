@@ -11,8 +11,8 @@ const string RESET_COLOR = "\033[0m";
 
 class UserInterface {
 private:
-    inline static const vector<char> ADMIN_OPTIONS = {'1', '2', '3', '4', '5', '6', '7', '8', '0'};
-    inline static const vector<char> GUEST_OPTIONS = {'1', '2', '3', '4', '5', '0'};
+    inline static const vector<char> ADMIN_OPTIONS = {'1', '2', '3', '4', '5', '6', '7', '8', '0', 'q', 'Q'};
+    inline static const vector<char> GUEST_OPTIONS = {'1', '2', '3', '4', '5', '0', 'q', 'Q'};
     shared_ptr<User> currentUser;
     DataService& ds;
     void searchByTypeMenu();

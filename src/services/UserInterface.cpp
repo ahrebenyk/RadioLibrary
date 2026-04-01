@@ -23,7 +23,6 @@ void UserInterface::selectUserMenu() {
     printMenuItem("---------- Оберіть користувача ---------");
     printMenuItem("1. Гість (лише перегляд)");
     printMenuItem("2. Адміністратор (повний доступ)");
-    printMenuItem("0. Вихід");
     printMenuLine();
     char option = getSelectedOption({'1', '2', '0'});
     switch (option) {
@@ -35,8 +34,6 @@ void UserInterface::selectUserMenu() {
         currentUser->setRole(UserRole::ADMIN);
         break;
     }
-    case '0':
-        return;
     default:
         showError("Невірний пункт меню, натисніть цифру для вибору");
     }
@@ -50,13 +47,13 @@ void UserInterface::showMainMenu() {
         printMenuItem("2. Пошук за типом");
         printMenuItem("3. Пошук за ID");
         printMenuItem("4. Пошук за назвою");
-        printMenuItem("5. Змінити користувача");
         if (currentUser->isAdmin()) {
-            printMenuItem("6. Додати компонент");
-            printMenuItem("7. Редагувати компонент");
-            printMenuItem("8. Видалити компонент");
+            printMenuItem("5. Додати компонент");
+            printMenuItem("6. Редагувати компонент");
+            printMenuItem("7. Видалити компонент");
         }
-        printMenuItem("0. Вихід");
+        printMenuItem("0. Змінити користувача");
+        printMenuItem("Q. Вихід");
         printMenuLine();
 
         vector<char> allowedOptions = currentUser->isAdmin() ? ADMIN_OPTIONS : GUEST_OPTIONS;
@@ -77,18 +74,19 @@ void UserInterface::showMainMenu() {
             searchByNameMenu();
             break;
         case '5':
-            selectUserMenu();
-            break;
-        case '6':
             addComponentMenu();
             break;
-        case '7':
+        case '6':
             editComponentMenu();
             break;
-        case '8':
+        case '7':
             deleteByIdMenu();
             break;
         case '0':
+            selectUserMenu();
+            break;
+        case 'q':
+        case 'Q':
             return;
         default:
             showError("Невірний пункт меню, натисніть цифру для вибору");
