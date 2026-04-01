@@ -480,7 +480,7 @@ char UserInterface::getSelectedOption(const vector<char>& allowedChars) {
     printInfoItem("Натисніть відповідну клавішу для вибору");
     do {
         char input = _getch();
-        if (std::find(allowedChars.begin(), allowedChars.end(), input) != allowedChars.end()) {
+        if (ranges::find(allowedChars, input) != allowedChars.end()) {
             return input;
         }
         showError("Невірний пункт меню, натисніть цифру для вибору");
