@@ -14,7 +14,7 @@ using namespace std;
 
 using json = nlohmann::json;
 
-class JsonFileService {
+class JsonStorageService {
 public:
     static vector<unique_ptr<Component>> loadFromFile(const string& filename);
     static void saveToFile(const string& filename, const vector<unique_ptr<Component>>& data);

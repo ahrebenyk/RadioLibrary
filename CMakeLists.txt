@@ -13,7 +13,7 @@ add_executable(RadioLibrary src/main.cpp
         src/components/Capacitor.cpp
         src/services/DataService.cpp
         src/services/UserInterface.cpp
-        src/services/JsonFileService.cpp)
+        src/services/JsonStorageService.cpp)
 
 add_custom_target(copy_data_files ALL
         COMMAND ${CMAKE_COMMAND} -E copy_directory

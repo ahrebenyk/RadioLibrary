@@ -1,7 +1,7 @@
 #include "services/DataService.h"
 #include <fstream>
 #include <iostream>
-#include "services/JsonFileService.h"
+#include "services/JsonStorageService.h"
 
 using namespace std;
 
@@ -13,7 +13,7 @@ void DataService::clear() {
 }
 
 void DataService::load() {
-    database = JsonFileService::loadFromFile(this->filename);
+    database = JsonStorageService::loadFromFile(this->filename);
     if (database.empty()) {
         cout << "База даних порожня або файл не знайдено." << endl;
     }
@@ -85,7 +85,7 @@ bool DataService::deleteById(int id) {
 
     if (it != database.end()) {
         database.erase(it);
-        JsonFileService::saveToFile(this->filename, database);
+        JsonStorageService::saveToFile(this->filename, database);
         return true;
     }
 
@@ -233,7 +233,7 @@ void DataService::add(unique_ptr<Component> component) {
 void DataService::save() {
     checkAdminAccess();
     try {
-        JsonFileService::saveToFile(this->filename, database);
+        JsonStorageService::saveToFile(this->filename, database);
     } catch (const exception& e) {
         cout << "Помилка під час збереження даних: " << e.what() << endl;
     }

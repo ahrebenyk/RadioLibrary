@@ -1,10 +1,10 @@
-#include "services/JsonFileService.h"
+#include "services/JsonStorageService.h"
 #include <fstream>
 #include <iostream>
 
 using namespace std;
 
-vector<unique_ptr<Component>> JsonFileService::loadFromFile(const string& filename) {
+vector<unique_ptr<Component>> JsonStorageService::loadFromFile(const string& filename) {
     vector<unique_ptr<Component>> components;
     ifstream file(filename);
 
@@ -24,7 +24,7 @@ vector<unique_ptr<Component>> JsonFileService::loadFromFile(const string& filena
     return components;
 }
 
-unique_ptr<Component> JsonFileService::parseComponent(const json& j) {
+unique_ptr<Component> JsonStorageService::parseComponent(const json& j) {
     string type = j.at("type").get<string>();
     if (type == "Resistor") {
         return parseResistor(j);
@@ -42,7 +42,7 @@ unique_ptr<Component> JsonFileService::parseComponent(const json& j) {
     return nullptr;
 }
 
-unique_ptr<Resistor> JsonFileService::parseResistor(const json& j) {
+unique_ptr<Resistor> JsonStorageService::parseResistor(const json& j) {
     return make_unique<Resistor>(
         j.at("id").get<int>(),
         j.at("name").get<string>(),
@@ -51,7 +51,7 @@ unique_ptr<Resistor> JsonFileService::parseResistor(const json& j) {
     );
 }
 
-unique_ptr<Capacitor> JsonFileService::parseCapacitor(const json& j) {
+unique_ptr<Capacitor> JsonStorageService::parseCapacitor(const json& j) {
     return make_unique<Capacitor>(
         j.at("id").get<int>(),
         j.at("name").get<string>(),
@@ -60,7 +60,7 @@ unique_ptr<Capacitor> JsonFileService::parseCapacitor(const json& j) {
     );
 }
 
-unique_ptr<Diode> JsonFileService::parseDiode(const json& j) {
+unique_ptr<Diode> JsonStorageService::parseDiode(const json& j) {
     return make_unique<Diode>(
         j.at("id").get<int>(),
         j.at("name").get<string>(),
@@ -70,7 +70,7 @@ unique_ptr<Diode> JsonFileService::parseDiode(const json& j) {
     );
 }
 
-unique_ptr<Transistor> JsonFileService::parseTransistor(const json& j) {
+unique_ptr<Transistor> JsonStorageService::parseTransistor(const json& j) {
     return make_unique<Transistor>(
         j.at("id").get<int>(),
         j.at("name").get<string>(),
@@ -81,7 +81,7 @@ unique_ptr<Transistor> JsonFileService::parseTransistor(const json& j) {
     );
 }
 
-void JsonFileService::saveToFile(const string& filename, const vector<unique_ptr<Component>>& database) {
+void JsonStorageService::saveToFile(const string& filename, const vector<unique_ptr<Component>>& database) {
     nlohmann::json jArray = nlohmann::json::array();
 
     for (const auto& item : database) {

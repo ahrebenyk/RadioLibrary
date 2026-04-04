@@ -7,7 +7,7 @@
 
 #include "components/Resistor.h"
 #include "components/Transistor.h"
-#include "services/JsonFileService.h"
+#include "services/JsonStorageService.h"
 
 UserInterface::UserInterface(DataService& dataService, shared_ptr<User> user) :
     ds(dataService), currentUser(user) {
