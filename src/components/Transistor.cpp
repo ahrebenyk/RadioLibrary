@@ -1,19 +1,18 @@
 #include "components/Transistor.h"
-#include <iostream>
+
+#include <format>
 
 using namespace std;
 
 Transistor::Transistor(int id, const string& name, const string& polarity, double voltage, double current, double gain)
-    : Component(id, name, ComponentType::Transistor), polarity(polarity), voltage(voltage), current(current), gain(gain) {}
+    : Component(id, name, ComponentType::Transistor), polarity(polarity), voltage(voltage), current(current),
+      gain(gain) {
+}
 
-void Transistor::showInfo() const {
-    cout << COMPONENT_COLOR;
-    cout << "ID:\t\t" << id << "\n";
-    cout << "Тип:\t\tТранзистор\n";
-    cout << "Назва:\t\t" << name << "\n";
-    cout << "Провідність:\t" << polarity << "\n";
-    cout << "Напруга:\t" << voltage << " В\n";
-    cout << "Струм:\t\t" << current << " А\n";
-    cout << "Підсилення:\t" << gain << "\n";
-    cout << RESET_COMPONENT_COLOR;
+string Transistor::toString() const {
+    return format(
+        "ID:\t\t{}\nТип:\t\t{}\nНазва:\t\t{}\nПровідність:\t{}\nНапруга:\t{} В\nСтрум:\t\t{} А\nПідсилення:\t{}\n",
+        id, componentTypeToUkString(ComponentType::Transistor), name, polarity,
+        formatDouble(voltage), formatDouble(current), formatDouble(gain)
+    );
 }

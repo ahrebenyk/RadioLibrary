@@ -14,7 +14,7 @@ private:
 
 public:
     Transistor(int id, const string& name, const string& polarity, double voltage, double current, double gain);
-    void showInfo() const override;
+    string toString() const override;
     string getPolarity() const { return polarity; }
     void setPolarity(const string& pol) { this->polarity = pol;}
     double getVoltage() const { return voltage; }

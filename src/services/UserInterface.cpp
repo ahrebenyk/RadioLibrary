@@ -119,7 +119,7 @@ void UserInterface::getByIdMenu() {
     if (result) {
         printInfoItem("\nЗнайдено компонент:");
         printMenuLine();
-        result->showInfo();
+        printComponent(result);
         printMenuLine();
     } else {
         printErrorItem(format("\nКомпонент з ID {} не знайдено", searchId));
@@ -136,7 +136,7 @@ void UserInterface::deleteByIdMenu() {
     if (result) {
         printInfoItem("Знайдено компонент:");
         printMenuLine();
-        result->showInfo();
+        printComponent(result);
         printMenuLine();
         bool confirm = readConfirm("Ви впевнені що хочете видалити цей компонент?");
         if (confirm) {
@@ -265,7 +265,7 @@ void UserInterface::editResistorMenu(const Component* component) {
         clearScreen();
         printMenuItem("--------- Редагування резистора --------");
         printMenuLine();
-        resistor->showInfo();
+        printComponent(resistor);
         printMenuLine();
         printMenuItem("1. Змінити назву");
         printMenuItem("2. Змінити опір");
@@ -310,7 +310,7 @@ void UserInterface::editDiodeMenu(const Component* component) {
         clearScreen();
         printMenuItem("----------- Редагування діода ----------");
         printMenuLine();
-        diode->showInfo();
+        printComponent(diode);
         printMenuLine();
         printMenuItem("1. Змінити назву");
         printMenuItem("2. Змінити струм");
@@ -362,7 +362,7 @@ void UserInterface::editTransistorMenu(const Component* component) {
         clearScreen();
         printMenuItem("-------- Редагування транзистора -------");
         printMenuLine();
-        transistor->showInfo();
+        printComponent(transistor);
         printMenuLine();
         printMenuItem("1. Змінити назву");
         printMenuItem("2. Змінити провідність");
@@ -420,7 +420,7 @@ void UserInterface::editCapacitorMenu(const Component* component) {
         clearScreen();
         printMenuItem("------- Редагування конденсатора -------");
         printMenuLine();
-        capacitor->showInfo();
+        printComponent(capacitor);
         printMenuLine();
         printMenuItem("1. Змінити назву");
         printMenuItem("2. Змінити напругу");
@@ -471,9 +471,13 @@ void UserInterface::printComponentsByType(ComponentType type) {
 void UserInterface::printComponents(const vector<const Component*>& components) {
     printMenuLine();
     for (auto* comp : components) {
-        comp->showInfo();
+        printComponent(comp);
         printMenuLine();
     }
+}
+
+void UserInterface::printComponent(const Component* component) {
+    cout << COMPONENT_COLOR << component->toString() << RESET_COLOR;
 }
 
 char UserInterface::getSelectedOption(const vector<char>& allowedChars) {

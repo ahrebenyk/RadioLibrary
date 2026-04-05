@@ -80,7 +80,7 @@ void CLI::listComponents(const CommandData& cmd) const {
 
     auto results = ds.search(id, compTypeOpt, namePart);
     printInfo(format("Знайдено компонентів: {}", results.size()));
-    printComponents(results);
+    showComponents(results);
 }
 
 void CLI::addComponent(const CommandData& cmd) {
@@ -209,7 +209,7 @@ void CLI::deleteComponent(const CommandData& cmd) {
         printError(format("Компонент з ID {} не знайдено", id));
         return;
     }
-    printComponent(comp);
+    showComponent(comp);
 
     if (!confirm(format("Видалити компонент ID {}?", id))) {
         printInfo("Видалення скасовано");
@@ -246,14 +246,14 @@ void CLI::showHelp() {
 }
 
 void CLI::showViewCommandsHelp() {
-    cout << CLI_INF_COLOR << "Змінити користувача:" << CLI_RESET_CLR << "\n";
+    cout << CLI_INF_CLR << "Змінити користувача:" << CLI_RESET_CLR << "\n";
     cout << "su --u <role>          Можливі значення: admin, guest\n";
-    cout << CLI_INF_COLOR << "Команди перегляду:" << CLI_RESET_CLR << "\n";
+    cout << CLI_INF_CLR << "Команди перегляду:" << CLI_RESET_CLR << "\n";
     cout << "list, ls               Показати всі компоненти\n";
     cout << "  --type (--t) <t>     Опціональний фільтр за типом: resistor, diode, transistor, capacitor\n\n";
     cout << "  --name (--n) <name>  Опціональний за назвою або частиною назви\n\n";
     cout << "  --id <id>            Опціональний фільтр за id\n\n";
-    cout << CLI_INF_COLOR << "Приклади:" << CLI_RESET_CLR << "\n";
+    cout << CLI_INF_CLR << "Приклади:" << CLI_RESET_CLR << "\n";
     cout << CLI_EXAMPLES_CLR;
     cout << "list\n";
     cout << "list --type resistor\n";
@@ -265,7 +265,7 @@ void CLI::showViewCommandsHelp() {
 }
 
 void CLI::showEditCommandsHelp() {
-    cout << CLI_INF_COLOR << "Команди редагування:" << CLI_RESET_CLR << "\n";
+    cout << CLI_INF_CLR << "Команди редагування:" << CLI_RESET_CLR << "\n";
     cout << "add, a                 Додати компонент\n";
     cout << "  --type (--t) <t>     Тип компонента\n";
     cout << "  --name (--n) <назва> Назва\n";
@@ -278,7 +278,7 @@ void CLI::showEditCommandsHelp() {
     cout << "  [будь-які поля з команди add]\n\n";
     cout << "delete, del, d         Видалити компонент\n";
     cout << "  --id <id>            Ідентифікатор\n";
-    cout << CLI_INF_COLOR << "Приклади:" << CLI_RESET_CLR << "\n";
+    cout << CLI_INF_CLR << "Приклади:" << CLI_RESET_CLR << "\n";
     cout << CLI_EXAMPLES_CLR;
     cout << "  add --type diode --name D4148 --voltage 75 --current 0.3 --material Si\n";
     cout << "  add --t diode --n D4148 --v 75 --c 0.3 --m Si\n";
@@ -380,18 +380,22 @@ bool CLI::checkArg(const map<string, string>& args, const string& key, const str
     return true;
 }
 
-void CLI::printComponents(const vector<const Component*>& components) {
+void CLI::showComponents(const vector<const Component*>& components) {
     printDivider();
     for (auto* comp : components) {
-        comp->showInfo();
+        printComponent(comp);
         printDivider();
     }
 }
 
-void CLI::printComponent(const Component* comp) {
+void CLI::showComponent(const Component* comp) {
     printDivider();
-    comp->showInfo();
+    printComponent(comp);
     printDivider();
+}
+
+void CLI::printComponent(const Component* component) {
+    cout << CLI_COMPONENT_CLR << component->toString() << CLI_RESET_CLR;
 }
 
 void CLI::printDivider() {
@@ -423,5 +427,5 @@ void CLI::printError(const string& msg) {
 }
 
 void CLI::printInfo(const string& msg) {
-    cout << CLI_INF_COLOR << msg << CLI_RESET_CLR << "\n";
+    cout << CLI_INF_CLR << msg << CLI_RESET_CLR << "\n";
 }

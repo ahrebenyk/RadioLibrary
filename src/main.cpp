@@ -11,7 +11,6 @@ int main()
     SetConsoleCP(CP_UTF8);
     SetConsoleOutputCP(CP_UTF8);
     auto user = std::make_shared<User>(UserRole::GUEST);
-    // auto user = std::make_shared<User>(UserRole::ADMIN);
     DataService ds("data/components.json", user);
     ds.load();
     CLI cli(ds, user);

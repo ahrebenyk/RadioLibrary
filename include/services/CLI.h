@@ -13,9 +13,10 @@ struct CommandData {
 };
 
 static const string CLI_ERR_COLOR = "\033[31m";
-static const string CLI_INF_COLOR = "\033[36m";
+static const string CLI_INF_CLR = "\033[36m";
 static const string CLI_EXAMPLES_CLR = "\033[2m";
 static const string CLI_RESET_CLR = "\033[0m";
+static const string CLI_COMPONENT_CLR = "\033[37m";
 
 class CLI {
 public:
@@ -50,7 +51,8 @@ private:
     static void showViewCommandsHelp();
     static void showEditCommandsHelp();
     static void printDivider();
-    static void printComponents(const vector<const Component*>& list);
+    static void showComponents(const vector<const Component*>& list);
+    void showComponent(const Component* comp);
     static void printComponent(const Component* comp);
     bool checkAccess() const;
     static bool confirm(const string& prompt);

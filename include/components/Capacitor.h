@@ -15,7 +15,7 @@ public:
     void setVoltage(double volt) { this->voltage = volt; }
     double getCapacity() const { return capacity; }
     void setCapacity(double cap) { this->capacity = cap; }
-    void showInfo() const override;
+    string toString() const override;
 };
 
 #endif

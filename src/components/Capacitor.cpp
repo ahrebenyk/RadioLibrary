@@ -1,18 +1,16 @@
 #include "components/Capacitor.h"
 
-#include <iostream>
+#include <format>
 
 using namespace std;
 
 Capacitor::Capacitor(int id, const string& name, double volt, double cap)
-    : Component(id, name, ComponentType::Capacitor), voltage(volt), capacity(cap) {}
+    : Component(id, name, ComponentType::Capacitor), voltage(volt), capacity(cap) {
+}
 
-void Capacitor::showInfo() const {
-    cout << COMPONENT_COLOR;
-    cout << "ID:\t\t" << id << "\n";
-    cout << "Тип:\t\tКонденсатор\n";
-    cout << "Назва:\t\t" << name << "\n";
-    cout << "Напруга:\t" << voltage << " В\n";
-    cout << "Ємність:\t" << capacity << " мФ\n";
-    cout << RESET_COMPONENT_COLOR;
+string Capacitor::toString() const {
+    return format(
+        "ID:\t\t{}\nТип:\t\t{}\nНазва:\t\t{}\nНапруга:\t{} В\nЄмність:\t{} мФ\n",
+        id, componentTypeToUkString(ComponentType::Capacitor), name, formatDouble(voltage), formatDouble(capacity)
+    );
 }

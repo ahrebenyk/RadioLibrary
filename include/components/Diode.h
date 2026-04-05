@@ -17,7 +17,7 @@ public:
     void setVoltage(double volt) { this->voltage = volt; }
     string getMaterial() const { return material; }
     void setMaterial(const string& mat) { this->material = mat; }
-    void showInfo() const override;
+    string toString() const override;
 };
 
 #endif

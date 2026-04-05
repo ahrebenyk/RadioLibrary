@@ -8,6 +8,7 @@ const string MENU_COLOR = "\033[32m";
 const string ERROR_COLOR = "\033[31m";
 const string INFO_COLOR = "\033[90m";
 const string RESET_COLOR = "\033[0m";
+const string COMPONENT_COLOR = "\033[37m";
 
 class UserInterface {
 private:
@@ -33,6 +34,7 @@ private:
     void printAllComponents();
     void printComponentsByType(ComponentType type);
     static void printComponents(const vector<const Component*>& components);
+    static void printComponent(const Component* component);
     static char getSelectedOption(const vector<char>& allowedChars);
     static int readInt(const string& prompt);
     static double readDouble(const string& input);

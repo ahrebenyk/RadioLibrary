@@ -1,18 +1,16 @@
 #include "components/Diode.h"
-#include <iostream>
+
+#include <format>
 
 using namespace std;
 
 Diode::Diode(int id, const string& name, double current, double voltage, const string& mat)
-    : Component(id, name, ComponentType::Diode), current(current), voltage(voltage), material(mat) {}
+    : Component(id, name, ComponentType::Diode), current(current), voltage(voltage), material(mat) {
+}
 
-void Diode::showInfo() const {
-    cout << COMPONENT_COLOR;
-    cout << "ID:\t\t" << id << "\n";
-    cout << "Тип:\t\tДіод\n";
-    cout << "Назва:\t\t" << name << "\n";
-    cout << "Струм:\t\t" << current << " А\n";
-    cout << "Напруга:\t" << voltage << " В\n";
-    cout << "Матеріал:\t" << material << "\n";
-    cout << RESET_COMPONENT_COLOR;
+string Diode::toString() const {
+    return format(
+        "ID:\t\t{}\nТип:\t\t{}\nНазва:\t\t{}\nСтрум:\t\t{} А\nНапруга:\t{} В\nМатеріал:\t{}\n",
+        id, componentTypeToUkString(ComponentType::Diode), name, formatDouble(current), formatDouble(voltage), material
+    );
 }

@@ -1,17 +1,16 @@
 #include "components/Resistor.h"
-#include <iostream>
+
+#include <format>
 
 using namespace std;
 
 Resistor::Resistor(int id, const string& name, double res, double pwr)
-    : Component(id, name, ComponentType::Resistor), resistance(res), power(pwr) {}
+    : Component(id, name, ComponentType::Resistor), resistance(res), power(pwr) {
+}
 
-void Resistor::showInfo() const {
-    cout << COMPONENT_COLOR;
-    cout << "ID:\t\t" << id << "\n";
-    cout << "Тип:\t\tРезистор\n";
-    cout << "Назва:\t\t" << name << "\n";
-    cout << "Опір:\t\t" << resistance << " Ом\n";
-    cout << "Потужність:\t" << power << " Вт\n";
-    cout << RESET_COMPONENT_COLOR;
+string Resistor::toString() const {
+    return format(
+        "ID:\t\t{}\nТип:\t\t{}\nНазва:\t\t{}\nОпір:\t\t{} Ом\nПотужність:\t{} Вт\n",
+        id, componentTypeToUkString(ComponentType::Resistor), name, formatDouble(resistance), formatDouble(power)
+    );
 }

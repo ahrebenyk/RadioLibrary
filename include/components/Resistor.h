@@ -15,7 +15,7 @@ public:
     void setResistance(double res) { this->resistance = res; }
     double getPower() const { return power; }
     void setPower(double pow) { this->power = pow; }
-    void showInfo() const override;
+    string toString() const override;
 };
 
 #endif

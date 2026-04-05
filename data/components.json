@@ -25,7 +25,7 @@
     "type": "Diode",
     "name": "1N4148 Signal",
     "current": 0.3,
-    "voltage": 100.0,
+    "voltage": 1000000.0,
     "material": "Silicon"
   },
   {
