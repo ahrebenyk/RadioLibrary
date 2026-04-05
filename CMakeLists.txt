@@ -12,7 +12,6 @@ add_executable(RadioLibrary src/main.cpp
         src/components/Transistor.cpp
         src/components/Capacitor.cpp
         src/services/DataService.cpp
-        src/services/UserInterface.cpp
         src/services/JsonStorageService.cpp
         src/services/CLI.cpp)
 

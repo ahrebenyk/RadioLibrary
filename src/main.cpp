@@ -3,7 +3,6 @@
 
 #include "services/CLI.h"
 #include "services/DataService.h"
-#include "services/UserInterface.h"
 
 int main()
 {
@@ -15,6 +14,4 @@ int main()
     ds.load();
     CLI cli(ds, user);
     cli.run();
-    // UserInterface ui(ds, currentUser);
-    // ui.start();
 }
