@@ -15,14 +15,14 @@ add_executable(RadioLibrary src/main.cpp
         src/services/JsonStorageService.cpp
         src/services/CLI.cpp)
 
-add_custom_target(copy_data_files ALL
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_CURRENT_SOURCE_DIR}/data
-        ${CMAKE_CURRENT_BINARY_DIR}/data
-        COMMENT "Оновлюю файли бази даних у папці збірки..."
+add_custom_target(copy_data_file ALL
+        COMMAND ${CMAKE_COMMAND} -E copy
+        "${CMAKE_CURRENT_SOURCE_DIR}/data/components.json"
+        "${CMAKE_CURRENT_BINARY_DIR}/components.json"
+        COMMENT "Копіюю файл бази даних у папку збірки..."
 )
 
-add_dependencies(RadioLibrary copy_data_files)
+add_dependencies(RadioLibrary copy_data_file)
 
 if(WIN32)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static -static-libgcc -static-libstdc++")
