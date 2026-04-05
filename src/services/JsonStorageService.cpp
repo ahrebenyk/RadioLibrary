@@ -99,7 +99,7 @@ void JsonStorageService::saveToFile(const string& filename, const vector<unique_
             jItem["gain"] = t->getGain();
             jItem["polarity"] = t->getPolarity();
             jItem["current"] = t->getCurrent();
-            jItem["volatage"] = t->getVoltage();
+            jItem["voltage"] = t->getVoltage();
         } else if (item->getType() == ComponentType::Diode) {
             auto* t = static_cast<Diode*>(item.get());
             jItem["current"] = t->getCurrent();
