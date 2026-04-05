@@ -15,7 +15,7 @@ public:
     void setRole(UserRole newRole) { role = newRole; }
     bool isAdmin() const { return role == UserRole::ADMIN; }
     string getRoleString() const {
-        return isAdmin() ? "Адміністратор" : "Гість";
+        return isAdmin() ? string("Адміністратор") : string("Гість");
     }
 };
 #endif

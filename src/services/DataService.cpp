@@ -19,17 +19,6 @@ void DataService::load() {
     }
 }
 
-vector<const Component*> DataService::getAll() const {
-    vector<const Component*> all;
-    all.reserve(database.size());
-
-    for (const auto& item : database) {
-        all.push_back(item.get());
-    }
-
-    return all;
-}
-
 const Component* DataService::getById(int targetId) const {
     for (const auto& item : database) {
         if (item->getId() == targetId) {
@@ -48,30 +37,36 @@ Component* DataService::getByIdInternal(int targetId) const {
     return nullptr;
 }
 
-vector<const Component*> DataService::searchByType(const ComponentType type) const {
+vector<const Component*> DataService::search(const optional<int> targetId, const optional<ComponentType> type, const optional<string>& namePart) const {
     std::vector<const Component*> results;
-    for (const auto& item : database) {
-        if (item->getType() == type) {
-            results.push_back(item.get());
+    for (const auto& compPtr : database) {
+        bool matches = true;
+
+        if (targetId && compPtr->getId() != targetId.value()) {
+            matches = false;
+        }
+
+        if (matches && type && compPtr->getType() != type.value()) {
+            matches = false;
+        }
+
+        if (matches && namePart) {
+            string query = namePart.value();
+            ranges::transform(query, query.begin(), ::tolower);
+
+            string name = compPtr->getName();
+            ranges::transform(name, name.begin(), ::tolower);
+
+            if (name.find(query) == string::npos) {
+                matches = false;
+            }
+        }
+
+        if (matches) {
+            results.push_back(compPtr.get());
         }
     }
-    return results;
-}
 
-vector<const Component*> DataService::searchByName(const string& namePart) const {
-    vector<const Component*> results;
-
-    string query = namePart;
-    ranges::transform(query, query.begin(), ::tolower);
-
-    for (const auto& item : database) {
-        string itemName = item->getName();
-        ranges::transform(itemName, itemName.begin(), ::tolower);
-
-        if (itemName.find(query) != string::npos) {
-            results.push_back(item.get());
-        }
-    }
     return results;
 }
 

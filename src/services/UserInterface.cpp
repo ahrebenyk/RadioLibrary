@@ -157,7 +157,7 @@ void UserInterface::searchByNameMenu() {
     string namePart;
     printInfoItem("Введіть частину назви компонента:");
     getline(cin >> std::ws, namePart);
-    vector<const Component*> results = ds.searchByName(namePart);
+    vector<const Component*> results = ds.search(nullopt, nullopt, namePart);
     printInfoItem(format("\nЗнайдено компонентів за назвою '{}' : {}", namePart, results.size()));
     printComponents(results);
     awaitKey();
@@ -457,13 +457,13 @@ void UserInterface::editCapacitorMenu(const Component* component) {
 }
 
 void UserInterface::printAllComponents() {
-    auto results = ds.getAll();
+    auto results = ds.search(nullopt, nullopt, nullopt);
     printInfoItem(format("\nЗнайдено компонентів: {}", results.size()));
     printComponents(results);
 }
 
 void UserInterface::printComponentsByType(ComponentType type) {
-    auto results = ds.searchByType(type);
+    auto results = ds.search(nullopt, type, nullopt);
     printInfoItem(format("\nЗнайдено компонентів за типом '{}' : {}", componentTypeToUkString(type), results.size()));
     printComponents(results);
 }

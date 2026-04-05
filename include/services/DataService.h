@@ -27,9 +27,7 @@ public:
     ~DataService() = default;
     void load();
     const Component* getById(int targetId) const;
-    vector<const Component*> searchByType(ComponentType type) const;
-    vector<const Component*> getAll() const;
-    vector<const Component*> searchByName(const string& namePart) const;
+    vector<const Component*> search(optional<int> targetId, optional<ComponentType> type, const optional<string>& namePart) const;
     bool deleteById(int id);
     void updateResistor(int id, optional<string> name, optional<double> resistance, optional<double> power);
     void updateDiode(int id, optional<string> name, optional<double> current, optional<double> voltage,

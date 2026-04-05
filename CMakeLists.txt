@@ -13,7 +13,8 @@ add_executable(RadioLibrary src/main.cpp
         src/components/Capacitor.cpp
         src/services/DataService.cpp
         src/services/UserInterface.cpp
-        src/services/JsonStorageService.cpp)
+        src/services/JsonStorageService.cpp
+        src/services/CLI.cpp)
 
 add_custom_target(copy_data_files ALL
         COMMAND ${CMAKE_COMMAND} -E copy_directory
@@ -23,3 +24,7 @@ add_custom_target(copy_data_files ALL
 )
 
 add_dependencies(RadioLibrary copy_data_files)
+
+if(WIN32)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static -static-libgcc -static-libstdc++")
+endif()
