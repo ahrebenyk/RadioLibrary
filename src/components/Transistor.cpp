@@ -11,7 +11,7 @@ Transistor::Transistor(int id, const string& name, const string& polarity, doubl
 
 string Transistor::toString() const {
     return format(
-        "ID:\t\t{}\nТип:\t\t{}\nНазва:\t\t{}\nПровідність:\t{}\nНапруга:\t{} В\nСтрум:\t\t{} А\nПідсилення:\t{}\n",
+        "Id:\t\t{}\nТип:\t\t{}\nНазва:\t\t{}\nПровідність:\t{}\nНапруга:\t{} В\nСтрум:\t\t{} А\nПідсилення:\t{}\n",
         id, componentTypeToUkString(ComponentType::Transistor), name, polarity,
         formatDouble(voltage), formatDouble(current), formatDouble(gain)
     );

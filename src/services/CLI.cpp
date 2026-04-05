@@ -142,7 +142,7 @@ void CLI::editComponent(const CommandData& cmd) {
 
     const Component* comp = ds.getById(id.value());
     if (!comp) {
-        printError(format("Компонент з ID {} не знайдено", id.value()));
+        printError(format("Компонент з Id '{}' не знайдено", id.value()));
         return;
     }
 
@@ -200,7 +200,7 @@ void CLI::editComponent(const CommandData& cmd) {
     }
     }
 
-    printInfo(format("Компонент ID {} змінено", id.value()));
+    printInfo(format("Компонент з Id '{}' змінено", id.value()));
 }
 
 void CLI::deleteComponent(const CommandData& cmd) {
@@ -210,21 +210,21 @@ void CLI::deleteComponent(const CommandData& cmd) {
     int id = idOpt.value();
     const Component* comp = ds.getById(id);
     if (!comp) {
-        printError(format("Компонент з ID {} не знайдено", id));
+        printError(format("Компонент з Id '{}' не знайдено", id));
         return;
     }
     showComponent(comp);
 
-    if (!confirm(format("Видалити компонент ID {}?", id))) {
+    if (!confirm(format("Видалити компонент з Id '{}'?", id))) {
         printInfo("Видалення скасовано");
         return;
     }
 
     if (ds.deleteById(id)) {
-        printInfo(format("Компонент ID {} видалено", id));
+        printInfo(format("Компонент з Id '{}' видалено", id));
         return;
     }
-    printError("Не вдалося видалити");
+    printError(format("Не вдалося видалити компонент з Id '{}'", id));
 }
 
 void CLI::switchUser(const CommandData& cmd) {
@@ -252,7 +252,7 @@ void CLI::showViewCommandsHelp() {
     cout << "su --u <role>          Можливі значення: admin, guest\n";
     cout << CLI_INF_CLR << "Команди перегляду:" << CLI_RESET_CLR << "\n";
     cout << "list, ls, search, s    Пошук компонентів\n";
-    cout << "  --type (--t) <t>     Опціональний фільтр за типом: resistor, diode, transistor, capacitor\n\n";
+    cout << "  --type (--t) <t>     Опціональний фільтр за типом: resistor (r), diode (d), transistor (t), capacitor (c)\n\n";
     cout << "  --name (--n) <name>  Опціональний фільтр за назвою або частиною назви\n\n";
     cout << "  --id <id>            Опціональний фільтр за id\n\n";
     cout << CLI_INF_CLR << "Приклади:" << CLI_RESET_CLR << "\n";
@@ -269,8 +269,8 @@ void CLI::showViewCommandsHelp() {
 void CLI::showEditCommandsHelp() {
     cout << CLI_INF_CLR << "Команди редагування, потребують прав адміністратора:" << CLI_RESET_CLR << "\n";
     cout << "add, a                 Додати компонент\n";
-    cout << "  --type (--t) <t>     Тип компонента\n";
-    cout << "  --name (--n) <назва> Назва\n";
+    cout << "  --type (--t) <t>     Тип компонента resistor (r), diode (d), transistor (t), capacitor (c)\n";
+    cout << "  --name (--n) <назва> Назва компонента\n";
     cout << "  Резистор:      --resistance (--r) <Ом>  --power (--p) <Вт>\n";
     cout << "  Діод:          --voltage (--v) <В>  --current (--c) <А>  --material (--m) <матеріал>\n";
     cout << "  Транзистор:    --polarity (--p)  --voltage (--v) <В>  --current (--c) <А>  --gain (--g)\n";
@@ -284,6 +284,9 @@ void CLI::showEditCommandsHelp() {
     cout << CLI_EXAMPLES_CLR;
     cout << "  add --type diode --name D4148 --voltage 75 --current 0.3 --material Si\n";
     cout << "  add --t diode --n D4148 --v 75 --c 0.3 --m Si\n";
+    cout << "  add --t r --n RES20 --r 1.5 --p 12\n";
+    cout << "  add --t c --n CAP201 --c 20 --v 120\n";
+    cout << "  add --t t --n TR001 --p pnp --c 20 --v 10 --g 2\n";
     cout << "  edit --id 3 --resistance 2200\n";
     cout << "  delete --id 3\n";
     cout << CLI_RESET_CLR << "\n";
@@ -337,7 +340,7 @@ optional<double> CLI::parseDouble(const string& key, const string& value) {
     try {
         return stod(value);
     } catch (...) {
-        printError(format("Невірне значення для {}: '{}'. Введіть число (напр. 1.23)", key, value));
+        printError(format("Невірне значення для параметра {}: '{}'. Введіть число (напр. 1.23)", key, value));
         return nullopt;
     }
 }
@@ -346,7 +349,7 @@ optional<int> CLI::parseInt(const string& key, const string& value) {
     try {
         return stoi(value);
     } catch (...) {
-        printError(format("Невірне число для {}: '{}'. Введіть ціле число (напр. 41)", key, value));
+        printError(format("Невірне значення для параметра {}: '{}'. Введіть ціле число (напр. 41)", key, value));
         return nullopt;
     }
 }

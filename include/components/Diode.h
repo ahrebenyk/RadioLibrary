@@ -10,7 +10,7 @@ private:
     double voltage;
     string material;
 public:
-    Diode(int id, const string& name, double current, double voltage, const string& mat);
+    Diode(int id, const string& name, double voltage, double current, const string& mat);
     double getCurrent() const { return current; }
     void setCurrent(double curr) { this->current = curr; }
     double getVoltage() const { return voltage; }

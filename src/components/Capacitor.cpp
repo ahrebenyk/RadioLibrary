@@ -10,7 +10,7 @@ Capacitor::Capacitor(int id, const string& name, double volt, double cap)
 
 string Capacitor::toString() const {
     return format(
-        "ID:\t\t{}\nТип:\t\t{}\nНазва:\t\t{}\nНапруга:\t{} В\nЄмність:\t{} мФ\n",
+        "Id:\t\t{}\nТип:\t\t{}\nНазва:\t\t{}\nНапруга:\t{} В\nЄмність:\t{} мФ\n",
         id, componentTypeToUkString(ComponentType::Capacitor), name, formatDouble(voltage), formatDouble(capacity)
     );
 }

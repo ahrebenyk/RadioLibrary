@@ -10,7 +10,7 @@ Resistor::Resistor(int id, const string& name, double res, double pwr)
 
 string Resistor::toString() const {
     return format(
-        "ID:\t\t{}\nТип:\t\t{}\nНазва:\t\t{}\nОпір:\t\t{} Ом\nПотужність:\t{} Вт\n",
+        "Id:\t\t{}\nТип:\t\t{}\nНазва:\t\t{}\nОпір:\t\t{} Ом\nПотужність:\t{} Вт\n",
         id, componentTypeToUkString(ComponentType::Resistor), name, formatDouble(resistance), formatDouble(power)
     );
 }
