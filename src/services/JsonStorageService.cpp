@@ -91,22 +91,22 @@ void JsonStorageService::saveToFile(const string& filename, const vector<unique_
         jItem["type"] = componentTypeToString(item->getType());
 
         if (item->getType() == ComponentType::Resistor) {
-            auto* r = static_cast<Resistor*>(item.get());
+            auto* r = dynamic_cast<Resistor*>(item.get());
             jItem["resistance"] = r->getResistance();
             jItem["power"] = r->getPower();
         } else if (item->getType() == ComponentType::Transistor) {
-            auto* t = static_cast<Transistor*>(item.get());
+            auto* t = dynamic_cast<Transistor*>(item.get());
             jItem["gain"] = t->getGain();
             jItem["polarity"] = t->getPolarity();
             jItem["current"] = t->getCurrent();
             jItem["voltage"] = t->getVoltage();
         } else if (item->getType() == ComponentType::Diode) {
-            auto* t = static_cast<Diode*>(item.get());
+            auto* t = dynamic_cast<Diode*>(item.get());
             jItem["current"] = t->getCurrent();
             jItem["voltage"] = t->getVoltage();
             jItem["material"] = t->getMaterial();
         } else if (item->getType() == ComponentType::Capacitor) {
-            auto* t = static_cast<Capacitor*>(item.get());
+            auto* t = dynamic_cast<Capacitor*>(item.get());
             jItem["capacity"] = t->getCapacity();
             jItem["voltage"] = t->getVoltage();
         }
