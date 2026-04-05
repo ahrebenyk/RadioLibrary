@@ -27,6 +27,7 @@ public:
     ~DataService() = default;
     void load();
     const Component* getById(int targetId) const;
+    bool existsByName(const string& name) const;
     vector<const Component*> search(optional<int> targetId, optional<ComponentType> type, const optional<string>& namePart) const;
     bool deleteById(int id);
     void updateResistor(int id, optional<string> name, optional<double> resistance, optional<double> power);

@@ -93,6 +93,10 @@ void CLI::addComponent(const CommandData& cmd) {
     auto compType = strToCompType(typeStr.value());
 
     if (!compType) return;
+    if (ds.existsByName(name.value())) {
+        printError(format("Компонент з назвою {} вже існує", name.value()));
+        return;
+    }
 
     switch (compType.value()) {
     case ComponentType::Resistor: {

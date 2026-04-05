@@ -28,6 +28,20 @@ const Component* DataService::getById(int targetId) const {
     return nullptr;
 }
 
+bool DataService::existsByName(const string& name) const {
+    string lowerName = name;
+    ranges::transform(lowerName, lowerName.begin(), ::tolower);
+
+    for (const auto& item : database) {
+        string itemName = item->getName();
+        ranges::transform(itemName, itemName.begin(), ::tolower);
+        if (lowerName == itemName) {
+            return true;
+        }
+    }
+    return false;
+}
+
 Component* DataService::getByIdInternal(int targetId) const {
     for (auto& item : database) {
         if (item->getId() == targetId) {
