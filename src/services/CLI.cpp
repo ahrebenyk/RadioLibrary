@@ -240,32 +240,30 @@ void CLI::switchUser(const CommandData& cmd) {
 
 void CLI::showHelp() {
     showViewCommandsHelp();
-    if (currentUser->isAdmin()) {
-        showEditCommandsHelp();
-    }
+    showEditCommandsHelp();
 }
 
 void CLI::showViewCommandsHelp() {
     cout << CLI_INF_CLR << "Змінити користувача:" << CLI_RESET_CLR << "\n";
     cout << "su --u <role>          Можливі значення: admin, guest\n";
     cout << CLI_INF_CLR << "Команди перегляду:" << CLI_RESET_CLR << "\n";
-    cout << "list, ls               Показати всі компоненти\n";
+    cout << "list, ls, search, s    Пошук компонентів\n";
     cout << "  --type (--t) <t>     Опціональний фільтр за типом: resistor, diode, transistor, capacitor\n\n";
-    cout << "  --name (--n) <name>  Опціональний за назвою або частиною назви\n\n";
+    cout << "  --name (--n) <name>  Опціональний фільтр за назвою або частиною назви\n\n";
     cout << "  --id <id>            Опціональний фільтр за id\n\n";
     cout << CLI_INF_CLR << "Приклади:" << CLI_RESET_CLR << "\n";
     cout << CLI_EXAMPLES_CLR;
     cout << "list\n";
-    cout << "list --type resistor\n";
+    cout << "ls --type resistor\n";
     cout << "list --t resistor\n";
     cout << "list --t r\n";
-    cout << "list --name BC\n";
-    cout << "list --id 3\n";
+    cout << "ls --name BC\n";
+    cout << "ls --id 3\n";
     cout << CLI_RESET_CLR << "\n";
 }
 
 void CLI::showEditCommandsHelp() {
-    cout << CLI_INF_CLR << "Команди редагування:" << CLI_RESET_CLR << "\n";
+    cout << CLI_INF_CLR << "Команди редагування, потребують прав адміністратора:" << CLI_RESET_CLR << "\n";
     cout << "add, a                 Додати компонент\n";
     cout << "  --type (--t) <t>     Тип компонента\n";
     cout << "  --name (--n) <назва> Назва\n";
@@ -335,7 +333,7 @@ optional<double> CLI::parseDouble(const string& key, const string& value) {
     try {
         return stod(value);
     } catch (...) {
-        printError(format("Невірне число для {}: '{}'", key, value));
+        printError(format("Невірне значення для {}: '{}'. Введіть число (напр. 1.23)", key, value));
         return nullopt;
     }
 }
@@ -344,7 +342,7 @@ optional<int> CLI::parseInt(const string& key, const string& value) {
     try {
         return stoi(value);
     } catch (...) {
-        printError(format("Невірне число для {}: '{}'", key, value));
+        printError(format("Невірне число для {}: '{}'. Введіть ціле число (напр. 41)", key, value));
         return nullopt;
     }
 }
@@ -418,8 +416,8 @@ bool CLI::confirm(const string& prompt) {
 }
 
 void CLI::printPrompt() const {
-    string role = currentUser->isAdmin() ? string("admin") : string("guest");
-    cout << "[" << role << "] > ";
+    const string role = currentUser->isAdmin() ? string("admin") : string("guest");
+    cout << CLI_INF_CLR << "[" << role << "] > " << CLI_RESET_CLR;
 }
 
 void CLI::printError(const string& msg) {

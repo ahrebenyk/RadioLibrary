@@ -34,7 +34,7 @@ private:
     void deleteComponent(const CommandData& cmd);
     void switchUser(const CommandData& cmd);
     void addComponent(const CommandData& cmd);
-    void showHelp();
+    static void showHelp();
     static void showViewCommandsHelp();
     static void showEditCommandsHelp();
     static optional<ComponentType> strToCompType(const string& typeStr);
